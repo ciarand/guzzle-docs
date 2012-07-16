@@ -34,7 +34,7 @@ Create composer.json file in the project root:
 
     {
         "require": {
-            "guzzle/guzzle": "2.6.*"
+            "guzzle/guzzle": "2.8.*"
         }
     }
 
