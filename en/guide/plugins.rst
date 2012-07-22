@@ -333,7 +333,7 @@ Plugin Collection Plugin
 
 This plugin can be used to attached plugins to every client created by a ``Guzzle\Service\Builder\ServiceBuilder``. The following example demonstrates adding a HistoryPlugin to each client created by a service builder.
 
-..code-block:: php
+.. code-block:: php
 
     use Guzzle\Service\Builder\ServiceBuilder;
     use Guzzle\Service\Plugin\PluginCollectionPlugin;
