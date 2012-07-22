@@ -303,7 +303,7 @@ Sending many HTTP requests serially (one at a time) can cause an unnecessary del
 
 You can pass a single request or an array of requests to a client's ``send()`` method.  Here's an example of sending three requests in parallel using a client object::
 
-    use Guzzle\Common\ExceptionCollection;
+    use Guzzle\Common\Exception\ExceptionCollection;
 
     try {
         $responses = $client->send(array(
@@ -318,7 +318,7 @@ You can pass a single request or an array of requests to a client's ``send()`` m
         }
     }
 
-A single request failure will not cause the entire pool of requests to fail.  Any exceptions thrown while transferring a pool of requests will be aggregated into a ``Guzzle\Common\ExceptionCollection`` exception.
+A single request failure will not cause the entire pool of requests to fail.  Any exceptions thrown while transferring a pool of requests will be aggregated into a ``Guzzle\Common\Exception\ExceptionCollection`` exception.
 
 Managed persistent HTTP connections
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -352,6 +352,16 @@ You can blacklist cURL options and headers from ever being sent by cURL by addin
     $client = new Guzzle\Http\Client('https://example.com/', array(
         'curl.blacklist' => array(CURLOPT_ENCODING, 'header.Accept')
     ));
+
+If you are using :doc:`Service Descriptions </guide/service/service_descriptions>` then you can override the cURL options within the definition, for example:
+
+.. code-block:: xml
+
+    <command name="get_users" method="GET" uri="/users">
+        <doc>Get a list of users</doc>
+        <param name="curl.CURLOPT_CONNECTTIMEOUT" default="100" />
+    </command>
+
 
 URI templates
 -------------
