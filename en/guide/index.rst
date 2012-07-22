@@ -4,6 +4,7 @@ Guides
 
 .. toctree::
 
+    plugins
     service/testing_clients
     http/creating_plugins
     service/creating_dynamic_commands
