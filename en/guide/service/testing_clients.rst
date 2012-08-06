@@ -123,7 +123,7 @@ You can also use the ``Guzzle\Http\Plugin\MockPlugin`` object directly with your
     $request->send();
 
     // The MockPlugin maintains a list of requests that were mocked
-    $this->assertArrayContains($request, $plugin->getReceivedRequests());
+    $this->assertContainsOnly($request, $plugin->getReceivedRequests());
 
 node.js web server for integration testing
 ------------------------------------------
