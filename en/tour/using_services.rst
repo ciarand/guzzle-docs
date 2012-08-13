@@ -40,7 +40,7 @@ A ServiceBuilder can get information from an XML file or a SimpleXMLElement.  Th
     <?xml version="1.0" ?>
     <guzzle>
 
-        <!-- You can optionally provide a list of XML file to include -->
+        <!-- You can optionally provide a list of XML files to include -->
         <includes>
             <include path="/path/to/other/services.xml" />
         </includes>
