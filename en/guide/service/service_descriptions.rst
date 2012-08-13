@@ -115,7 +115,7 @@ Dynamic commands are commands that build HTTP requests completely based on the c
 +-----------+----------------------------------------------------------------------+
 |  extends  | Extend a previously defined command in the same XML description to   |
 |           | inherit every attribute of the parent command including params.  Any |
-|           | settings specified in the chile command will override settings from  |
+|           | settings specified in the child command will override settings from  |
 |           | inherited from the parent.                                           |
 +-----------+----------------------------------------------------------------------+
 |  class    | Optional.  Specify a ``concrete command`` class that will be         |
