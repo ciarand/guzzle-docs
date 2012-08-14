@@ -115,7 +115,7 @@ Dynamic commands are commands that build HTTP requests completely based on the c
 +-----------+----------------------------------------------------------------------+
 |  extends  | Extend a previously defined command in the same XML description to   |
 |           | inherit every attribute of the parent command including params.  Any |
-|           | settings specified in the chile command will override settings from  |
+|           | settings specified in the child command will override settings from  |
 |           | inherited from the parent.                                           |
 +-----------+----------------------------------------------------------------------+
 |  class    | Optional.  Specify a ``concrete command`` class that will be         |
@@ -322,7 +322,7 @@ Commands will follow this format:
 Use Dynamic and Concrete Commands
 ---------------------------------
 
-Web service clients can utilize both concrete and dynamic commands.  When retrieving a command by name (``$command = $client->getCommand('command_name')``), the client will first check if it has a service description and if the service descriptions has a command defined by the name of 'command_name.'  If the client has a dynamic command named 'command_name', then a dynamic command will be created and returned.  If the client does not have a service description or its service description does not have a command defined by that name, it will see if a concrete command class maps to that name.  If it does, it will create the concrete command class and return it.  Whether or not the command is a concrete command or dynamic command doesn't matter to the end-developer as long as the developer can execute the command and get back a valuable response.
+Web service clients can utilize both concrete and dynamic commands.  When retrieving a command by name (``$command = $client->getCommand('command_name')``), the client will first check if it has a service description and if the service description has a command defined by the name of 'command_name.'  If the client has a dynamic command named 'command_name', then a dynamic command will be created and returned.  If the client does not have a service description or its service description does not have a command defined by that name, it will see if a concrete command class maps to that name.  If it does, it will create the concrete command class and return it.  Whether or not the command is a concrete command or dynamic command doesn't matter to the end-developer as long as the developer can execute the command and get back a valuable response.
 
 Concrete commands
 ~~~~~~~~~~~~~~~~~
