@@ -19,7 +19,7 @@ Installing Guzzle
 Phar
 ~~~~
 
-Guzzle is distributed using a Phar file that compresses all of the required classes into a single file.  In order to simplify installing Guzzle, `Monolog <https://github.com/seldaek/monolog>`_, `Doctrine Common <https://github.com/doctrine/common>`_ Cache layer, and `Symfony2's EventDispatcher <https://github.com/symfony/EventDispatcher>`_ are included.  Including the Guzzle phar file in your application will automatically configure autoloading so everything should just work.  You can download the Guzzle phar file from http://guzzlephp.org/guzzle.phar and simply include it in your scripts::
+Guzzle is distributed using a Phar file that compresses all of the required classes into a single file. In order to simplify installing Guzzle, `Monolog <https://github.com/seldaek/monolog>`_, `Doctrine Common <https://github.com/doctrine/common>`_ Cache layer, and `Symfony2's EventDispatcher <https://github.com/symfony/EventDispatcher>`_ are included. Including the Guzzle phar file in your application will automatically configure autoloading so everything should just work. You can download the Guzzle phar file from http://guzzlephp.org/guzzle.phar and simply include it in your scripts::
 
     require '/path/to/guzzle.phar';
 
@@ -72,7 +72,7 @@ Guzzle can be installed through PEAR (`this needs your help! <https://github.com
 Using your own autoloader
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you aren't using the Phar file and you aren't using Composer, then you will need to add Guzzle and Guzzle's dependencies to your application's autoloader.  If your application does not already use an autoloader, you can use the `Symfony2 ClassLoader component  <https://github.com/symfony/ClassLoader>`_ component::
+If you aren't using the Phar file and you aren't using Composer, then you will need to add Guzzle and Guzzle's dependencies to your application's autoloader. If your application does not already use an autoloader, you can use the `Symfony2 ClassLoader component  <https://github.com/symfony/ClassLoader>`_ component::
 
     require_once '/path/to/symfony/src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 
@@ -86,7 +86,7 @@ If you aren't using the Phar file and you aren't using Composer, then you will n
 Running the unit tests
 ----------------------
 
-Guzzle is unit tested with PHPUnit.  You will need to create your own phpunit.xml file in order to run the unit tests.  You can customize this file to suit your testing needs:
+Guzzle is unit tested with PHPUnit. You will need to create your own phpunit.xml file in order to run the unit tests. You can customize this file to suit your testing needs:
 
 .. code-block:: bash
 
