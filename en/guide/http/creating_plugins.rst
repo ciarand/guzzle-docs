@@ -37,6 +37,21 @@ Knowing what events to listen to
 
 Any class that implements the ``Guzzle\Common\HasDispatcherInterface`` must implement a static method, ``getAllEvents()``, that returns an array of the events that are emitted from the object.  You can browse the source to see each event, or you can call the static method directly in your code to get a list of available events.
 
+Event hooks
+-----------
+
++---------------------------------+---------------------------+----------------------------------+-------------------------------------+
+| Subject                         | Event                     | Description                      | Arguments                           |
++=================================+===========================+==================================+=====================================+
+| ``Guzzle\Http\Client``          | client.create_request     | Client has created a request     | * client: The client                |
+|                                 |                           |                                  | * request: The created request      |
++---------------------------------+---------------------------+----------------------------------+-------------------------------------+
+| ``Guzzle\Http\Message\Request`` | request.before_send       | About to send request            | * request: Request to be sent       |
+|                                 +---------------------------+----------------------------------+-------------------------------------+
+|                                 | request.sent              | Sent the request                 | * request: Request that was sent    |
+|                                 |                           |                                  | * response: Received response       |
++---------------------------------+---------------------------+----------------------------------+-------------------------------------+
+
 Examples of the event system
 ----------------------------
 
