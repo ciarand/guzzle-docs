@@ -39,6 +39,16 @@ You can override the number of seconds a cacheable response is stored in the cac
     // If the response to the request is cacheable, then the response will be cached for 100 seconds
     $request->getParams()->set('cache.override_ttl', 100);
 
+Custom caching decision
+~~~~~~~~~~~~~~~~~~~~~~~
+
+If the service you are interacting with does not return caching headers or returns responses that are normally something that would not be cached, you can set a ``cache.filter_strategy`` parameter on the params object of a request. This parameter should be a callable function that accepts a ``Guzzle\Http\Message\RequestInterface`` object and returns true if the request can be cached or false if the request cannot be cached::
+
+    // Causes every request to be cacheable
+    $request->getParams()->set('cache.filter_strategy', function (Guzzle\Http\Message\RequestInterface $request) {
+        return true;
+    });
+
 Revalidation options
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -51,6 +61,10 @@ Use the ``cache.key_filter`` parameter if you wish to strip certain headers or q
 
     $request->getParams()->set('cache.key_filter', 'query=a, q; header=Date, Host');
 
+.. note::
+
+    This parameter only works when no ``cache.filter_strategy`` parameter is provided.
+
 Setting Client-wide cache settings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -59,8 +73,8 @@ You can specify cache settings for every request created by a client by adding c
 .. code-block:: php
 
     $client = new Guzzle\Http\Client('http://www.test.com', array(
-        'cache.override_ttl' => 3600,
-        'cache.revalidate' => 'never'
+        'params.cache.override_ttl' => 3600,
+        'params.cache.revalidate' => 'never'
     ));
 
     echo $client->get('/')->getParams()->get('cache.override_ttl');
@@ -72,7 +86,6 @@ Cache revalidation
 ------------------
 
 If the cache plugin determines that a response to a GET request needs revalidation, a conditional GET is transferred to the origin server.  If the origin server returns a 304 response, then a response containing the merged headers of the cached response with the new response and the entity body of the cached response is returned.
-
 
 Cache adapters
 --------------
