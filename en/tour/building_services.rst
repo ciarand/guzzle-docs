@@ -117,7 +117,7 @@ Let's start creating a custom web service client. First we will extend the ``Guz
          *
          * @return self
          */
-        public static function factory($config)
+        public static function factory($config = array())
         {
             $default = array(
                 'base_url' => '{scheme}://{username}.test.com/',
