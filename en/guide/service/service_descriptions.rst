@@ -96,29 +96,39 @@ Dynamic commands
 
 Dynamic commands are commands that build HTTP requests completely based on the command definition and do not require a concrete command class. Dynamic command nodes utilize the following attributes:
 
-+-----------+----------------------------------------------------------------------+
-| Attribute | Description                                                          |
-+===========+======================================================================+
-|  name     | The key used to reference the command. Use snake_casing.             |
-+-----------+----------------------------------------------------------------------+
-|  method   | The HTTP method the command will execute (GET, HEAD, DELETE, POST,   |
-|           | PUT, OPTIONS).                                                       |
-+-----------+----------------------------------------------------------------------+
-|  uri      | The URI template of the request (e.g. ``/path/to/users``). The path  |
-|           | can be absolute or relative. A relative path will append to the path |
-|           | set on the base_url of the service. This attribute can contain       |
-|           | ``{key_name}`` URI templates, where ``key_name`` is a parameter in   |
-|           | command or set in the associated client's configuration data.        |
-+-----------+----------------------------------------------------------------------+
-|  extends  | Extend a previously defined command in the same XML description to   |
-|           | inherit every attribute of the parent command including params. Any  |
-|           | settings specified in the child command will override settings from  |
-|           | inherited from the parent.                                           |
-+-----------+----------------------------------------------------------------------+
-|  class    | Optional. Specify a ``concrete command`` class that will be          |
-|           | instantiated when the command is created. This is useful for         |
-|           | implementing complex response processing                             |
-+-----------+----------------------------------------------------------------------+
++---------------+----------------------------------------------------------------------+
+| Attribute     | Description                                                          |
++===============+======================================================================+
+|  name         | The key used to reference the command. Use snake_casing.             |
++---------------+----------------------------------------------------------------------+
+|  method       | The HTTP method the command will execute (GET, HEAD, DELETE, POST,   |
+|               | PUT, OPTIONS).                                                       |
++---------------+----------------------------------------------------------------------+
+|  uri          | The URI template of the request (e.g. ``/path/to/users``). The path  |
+|               | can be absolute or relative. A relative path will append to the path |
+|               | set on the base_url of the service. This attribute can contain       |
+|               | ``{key_name}`` URI templates, where ``key_name`` is a parameter in   |
+|               | command or set in the associated client's configuration data.        |
++---------------+----------------------------------------------------------------------+
+|  extends      | Extend a previously defined command in the same XML description to   |
+|               | inherit every attribute of the parent command including params. Any  |
+|               | settings specified in the child command will override settings from  |
+|               | inherited from the parent.                                           |
++---------------+----------------------------------------------------------------------+
+|  class        | Optional. Specify a ``concrete command`` class that will be          |
+|               | instantiated when the command is created. This is useful for         |
+|               | implementing complex response processing                             |
++---------------+----------------------------------------------------------------------+
+|  doc          | Optional. Command documentation                                      |
++---------------+----------------------------------------------------------------------+
+|  doc_url      | Optional. URL with additional command documentation                  |
++---------------+----------------------------------------------------------------------+
+|  result_type  | Optional. Specify the typehint for the result of the command         |
++---------------+----------------------------------------------------------------------+
+|  result_type  | Optional. Documentation specific to the result of the command        |
++---------------+----------------------------------------------------------------------+
+|  deprecated   | Optional. Whether or not the command is deprecated                   |
++---------------+----------------------------------------------------------------------+
 
 .. code-block:: xml
 
@@ -139,10 +149,15 @@ Attribute        Description                                                    
 ===============  =================================================================  ===========================================
 location         The location in which the parameter will be added to the           ``location="query"`` or
                  generated request.                                                 ``location="header:X-Header"``
+location_key     Key specifying where the location should be applied. For example,  ``location_key="X-Header"``
+                 this key can be used to specify a specific query string value
+                 name or header to use if the name of the parameter differs from 
+                 the place in which the location value should be applied.
 type             Type of variable (array, boolean, class, date, enum, float,        ``type="class:Guzzle\Common\Collection"``
                  integer, regex, string, timestamp). Some type commands accept
                  arguments by separating the type and argument with a colon         ``type="array"``
                  (e.g. enum:lorem,ipsum).
+type_args        Argument(s) to pass to the type validation                         ``type_args="a,'b',c"``
 required         Whether or not the argument is required. If a required parameter   ``@guzzle key required="true"`` or
                  is not set and you try to execute a command, an exception will be  ``@guzzle key required="false"``
                  thrown.
@@ -177,6 +192,10 @@ The **location** attribute can be one of the following values:
 |            | (e.g. ``location="post_field:FieldKey"``)                                                      |
 +------------+------------------------------------------------------------------------------------------------+
 | post_file  | Sets a path to file that should be send as post file                                           |
++------------+------------------------------------------------------------------------------------------------+
+| json       | If any JSON parameters are found, this location creates a JSON encoded body in the HTTP        |
+|            | request with each JSON parameter as a top level key value pair. JSON parameter values can be a |
+|            | nested array of values that will be json_encoded.                                              |
 +------------+------------------------------------------------------------------------------------------------+
 
 Use custom ``<types>`` for data validation
