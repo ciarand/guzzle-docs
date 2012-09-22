@@ -93,7 +93,7 @@ Guzzle is unit tested with PHPUnit. You will need to create your own phpunit.xml
     cp phpunit.xml.dist phpunit.xml
     phpunit
 
-You will need to install `node.js <http://nodejs.org/>`_ v0.5.0 or newer in order to test the cURL implementation.
+You will need to install node.js v0.5.0 or newer in order to test the cURL implementation.
 
 Framework integrations
 ----------------------

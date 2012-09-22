@@ -7,7 +7,13 @@ Guides
     plugins
     service/testing_clients
     http/creating_plugins
-    service/creating_dynamic_commands
+    service/service_descriptions
     batching
     http/caching
     service/resource_iterators
+    faq
+
+.. toctree::
+    :hidden:
+
+    service/creating_dynamic_commands

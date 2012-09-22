@@ -28,4 +28,4 @@ Guides
 API
 ---
 
-* `Read the API docs </api/index.html>`_
+* `Read the API docs <http://guzzlephp.org/api/index.html>`_
