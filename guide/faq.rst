@@ -16,8 +16,11 @@ How can I speed up my client?
 
 There are several things you can do to speed up your client:
 
-1. Disable type validation on your ``Guzzle\Service\Inspector``
-2. Utilize a C based HTTP message parser (e.g. ``Guzzle\Http\Parser\Message\PeclHttpMessageParser``)
+1. Disable operation validation by setting the ``command.disable_validation`` option to true on a command (this could have side effects)
+2. Disable operation response processing by setting ``command.response_processing`` to 'raw' on a command (this will have side effects)
+3. Disable operation model processing by setting ``command.response_processing`` to 'native' on a command (this will have side effects)
+4. Turn off model objects and use model arrays by setting ``command.response_processing`` to 'model_array' (this could have side effects)
+5. Utilize a C based HTTP message parser (e.g. ``Guzzle\Http\Parser\Message\PeclHttpMessageParser``)
 
 Why am I getting a 417 error response?
 --------------------------------------
