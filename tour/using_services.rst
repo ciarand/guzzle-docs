@@ -170,14 +170,12 @@ Here's how you would get the Foo client from the ServiceBuilder and execute a Ja
 
 You can take some shortcuts in your code by passing key-value pair arguments to a command when grabbing it from the client::
 
-    $objects = $client->getCommand('bucket.list_bucket', array('bucket' => 'my_bucket'))->execute();
+    $result = $client->getCommand('jar_jar', array('mesa' => 'address_senate'))->execute();
 
-Command results
-^^^^^^^^^^^^^^^
+Special command options
+^^^^^^^^^^^^^^^^^^^^^^^
 
-Command results can contain various types based on the command's implementation. Some commands might set the result to a Response object, some might use an array, SimpleXMLElement, or ``Guzzle\Service\Resource\Model``. Check the client's documentation or service description to see what the result format of a particular operation will be.
-
-To some extent, you can control the behavior of a command and what return types are created for a command by setting special options on the command. Any command that extends from ``Guzzle\Service\Command\AbstractCommand`` should honor these values.
+Command results can contain various types based on the command's implementation. Some commands might set the result to a Response object, some might use an array, SimpleXMLElement, or ``Guzzle\Service\Resource\Model``. Check the client's documentation or service description to see what the result format of a particular operation will be. To some extent, you can control the behavior of a command and what return types are created for a command by setting special options on the command. Any command that extends from ``Guzzle\Service\Command\AbstractCommand`` should honor these values.
 
 * command.headers: Associative array of headers to send with the request created by the command
 * command.on_complete: Function to execute when the command successfully completes. The function should accept a command object.

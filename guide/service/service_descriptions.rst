@@ -167,8 +167,6 @@ doc              Documentation for the parameter.                               
 min_length       Minimum value length.                                              ``min_length="5"``
 max_length       Maximum value length.                                              ``max_length="15"``
 static           A value that cannot be changed.                                    ``static="this cannot be changed"``
-prepend          Text to prepend to the value if the value is set.                  ``prepend="this_is_added_before."``
-append           Text to append to the value if the value is set.                   ``append=".this_is_added_after"``
 filters          CSV list of functions or static functions that modifies a string   ``@guzzle key filters="strtoupper,strrev"``
 ===============  =================================================================  ===========================================
 
