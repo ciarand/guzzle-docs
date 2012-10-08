@@ -8,15 +8,14 @@ Guzzle ships with a number of plugins that typically deal with the ``Guzzle\Http
 
     Any event subscriber attached to the ``EventDispatcher`` of a ``Guzzle\Http\Client`` or ``Guzzle\Service\Client`` object will automatically be attached to all request objects created by the client. This allows you to attach, for example, a  HistoryPlugin to a client object, and from that point on, every request sent through that client will utilize the HistoryPlugin.
 
-HTTP Plugins
-------------
-
 Guzzle provides easy to use request plugins that add behavior to requests based on signal slot event notifications.
 
-Over the wire logging
-~~~~~~~~~~~~~~~~~~~~~
+Log plugin
+----------
 
-Use the ``Guzzle\Plugin\LogPlugin\LogPlugin`` to view all data sent over the wire, including entity bodies and redirects::
+Use the ``Guzzle\Plugin\LogPlugin\LogPlugin`` to view all data sent over the wire, including entity bodies and redirects:
+
+.. code-block:: php
 
     use Guzzle\Http\Client;
     use Guzzle\Common\Log\ZendLogAdapter;
@@ -84,14 +83,18 @@ The code sample above wraps a ``Zend_Log`` object using a ``Guzzle\Common\Log\Ze
     <!doctype html><html><head>
     [...snipped]
 
-The LogPlugin has a helper method that can be used when debugging that will output the full HTTP request and response of a transaction::
+The LogPlugin has a helper method that can be used when debugging that will output the full HTTP request and response of a transaction:
+
+.. code-block:: php
 
     $client->addSubscriber(LogPlugin::getDebugPlugin());
 
 Backoff Plugin
-~~~~~~~~~~~~~~
+--------------
 
-The ``Guzzle\Plugin\Backoff\BackoffPlugin`` automatically retries failed HTTP requests using custom backoff strategies::
+The ``Guzzle\Plugin\Backoff\BackoffPlugin`` automatically retries failed HTTP requests using custom backoff strategies:
+
+.. code-block:: php
 
     use Guzzle\Http\Client;
     use Guzzle\Plugin\Backoff\BackoffPlugin;
@@ -106,10 +109,12 @@ The ``Guzzle\Plugin\Backoff\BackoffPlugin`` automatically retries failed HTTP re
     $request = $client->get('http://google.com/');
     $request->send();
 
-PHP-based caching forward proxy
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Cache plugin
+------------
 
-Guzzle can leverage HTTP's caching specifications using the ``Guzzle\Plugin\Cache\CachePlugin``. The CachePlugin provides a private transparent proxy cache that caches HTTP responses. The caching logic, based on `RFC 2616 <http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html>`_, uses HTTP headers to control caching behavior, cache lifetime, and supports ETag and Last-Modified based revalidation::
+Guzzle can leverage HTTP's caching specifications using the ``Guzzle\Plugin\Cache\CachePlugin``. The CachePlugin provides a private transparent proxy cache that caches HTTP responses. The caching logic, based on `RFC 2616 <http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html>`_, uses HTTP headers to control caching behavior, cache lifetime, and supports ETag and Last-Modified based revalidation:
+
+.. code-block:: php
 
     use Guzzle\Http\Client;
     use Doctrine\Common\Cache\ArrayCache;
@@ -137,10 +142,12 @@ Guzzle doesn't try to reinvent the wheel when it comes to caching or logging. Pl
 
 See :doc:`Caching </guide/http/caching>` for more information on the caching plugin.
 
-Cookie session plugin
-~~~~~~~~~~~~~~~~~~~~~
+Cookie plugin
+-------------
 
-Some web services require a Cookie in order to maintain a session. The ``Guzzle\Plugin\Cookie\CookiePlugin`` will add cookies to requests and parse cookies from responses using a CookieJar object::
+Some web services require a Cookie in order to maintain a session. The ``Guzzle\Plugin\Cookie\CookiePlugin`` will add cookies to requests and parse cookies from responses using a CookieJar object:
+
+.. code-block:: php
 
     use Guzzle\Http\Client;
     use Guzzle\Plugin\Cookie\CookiePlugin;
@@ -164,9 +171,11 @@ Some web services require a Cookie in order to maintain a session. The ``Guzzle\
     echo $request;
 
 MD5 hash validator plugin
-~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------
 
-Entity bodies can sometimes be modified over the wire due to a faulty TCP transport or misbehaving proxy. If an HTTP response contains a Content-MD5 header, then a MD5 hash of the entity body of a response can be compared against the Content-MD5 header of the response to determine if the response was delivered intact. The ``Guzzle\Plugin\Md5Validator\Md5ValidatorPlugin`` will throw an ``UnexpectedValueException`` if the calculated MD5 hash does not match the Content-MD5 hash::
+Entity bodies can sometimes be modified over the wire due to a faulty TCP transport or misbehaving proxy. If an HTTP response contains a Content-MD5 header, then a MD5 hash of the entity body of a response can be compared against the Content-MD5 header of the response to determine if the response was delivered intact. The ``Guzzle\Plugin\Md5Validator\Md5ValidatorPlugin`` will throw an ``UnexpectedValueException`` if the calculated MD5 hash does not match the Content-MD5 hash:
+
+.. code-block:: php
 
     use Guzzle\Http\Client;
     use Guzzle\Plugin\Md5Validator\Md5ValidatorPlugin;
@@ -184,7 +193,7 @@ Entity bodies can sometimes be modified over the wire due to a faulty TCP transp
 Calculating the MD5 hash of a large entity body or an entity body that was transferred using a Content-Encoding is an expensive operation. When working in high performance applications, you might consider skipping the MD5 hash validation for entity bodies bigger than a certain size or Content-Encoded entity bodies (see ``Guzzle\Plugin\Md5Validator\Md5ValidatorPlugin`` for more information).
 
 History plugin
-~~~~~~~~~~~~~~
+--------------
 
 The history plugin tracks all of the requests and responses sent through a request or client. This plugin can be useful for crawling or unit testing. By default, the history plugin stores up to 10 requests and responses.
 
@@ -207,7 +216,7 @@ The history plugin tracks all of the requests and responses sent through a reque
     echo count($history);
 
 Mock Plugin
-~~~~~~~~~~~
+-----------
 
 The mock plugin is useful for testing Guzzle clients. The mock plugin allows you to queue an array of responses that will satisfy requests sent from a client by consuming the request queue in FIFO order.
 
@@ -235,7 +244,7 @@ The mock plugin is useful for testing Guzzle clients. The mock plugin allows you
 .. _curl-auth:
 
 Curl Auth Plugin
-~~~~~~~~~~~~~~~~
+----------------
 
 If your web service client requires basic authorization, then you can use the CurlAuthPlugin to easily add an Authorization header to each request sent by the client.
 
@@ -257,7 +266,7 @@ If your web service client requires basic authorization, then you can use the Cu
     }
 
 OAuth 1.0 Plugin
-~~~~~~~~~~~~~~~~
+----------------
 
 Guzzle ships with an OAuth 1.0 plugin that can sign requests using a consumer key, consumer secret, OAuth token, and OAuth secret. Here's an example showing how to send an authenticated request to the Twitter REST API:
 
@@ -284,7 +293,7 @@ If you need to use a custom signing method, you can pass a ``signature_method`` 
     You can omit the ``token`` and ``token_secret`` options to use two-legged OAuth.
 
 Async Plugin
-~~~~~~~~~~~~
+------------
 
 The AsyncPlugin allows you to send requests that do not wait on a response. This is handled through cURL by utilizing the progress event. When a request has sent all of its data to the remote server, Guzzle adds a 1ms timeout on the request and instructs cURL to not download the body of the response. The async plugin then catches the exception and adds a mock response to the request, along with an X-Guzzle-Async header to let you know that the response was not fully downloaded.
 
@@ -298,6 +307,6 @@ The AsyncPlugin allows you to send requests that do not wait on a response. This
     $response = $client->get()->send();
 
 Third-party plugins
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 * `WSSE Authentication plugin <https://github.com/davedevelopment/guzzle-wsse-auth-plugin>`_

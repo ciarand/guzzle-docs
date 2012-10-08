@@ -13,21 +13,18 @@ PHPUnit integration
 
 Guzzle is unit tested using `PHPUnit <http://www.phpunit.de/>`_.  Your web service client's unit tests should extend ``Guzzle\Tests\GuzzleTestCase`` so that you can take advantage of some of the built in helpers.
 
-Files
-~~~~~
-
-The basic skeleton of a project can be generated using the phing build script from the Guzzle client template (https://github.com/guzzle/guzzle-client-template).  You will be prompted to answer several questions about your web service and a skeleton client project will be generated for you.
-
 In order to unit test your client, a developer would need to copy phpunit.xml.dist to phpunit.xml and make any needed modifications.  As a best practice and security measure for you and your contributors, it is recommended to add an ignore statement to your SCM so that phpunit.xml is ignored.
 
 Bootstrapping
 ~~~~~~~~~~~~~
 
-Your web service client should have a tests/ folder that contains a bootstrap.php file. The bootstrap.php file responsible for autoloading and configuring a ``Guzzle\Service\ServiceBuilder`` that is used throughout your unit tests for loading a configured client.
+Your web service client should have a tests/ folder that contains a bootstrap.php file. The bootstrap.php file responsible for autoloading and configuring a ``Guzzle\Service\Builder\ServiceBuilder`` that is used throughout your unit tests for loading a configured client. You can add custom parameters to your phpunit.xml file that expects users to provide the path to their configuration data.
 
 .. code-block:: php
 
-    Guzzle\Tests\GuzzleTestCase::setServiceBuilder(Guzzle\Service\ServiceBuilder::factory(array(
+Guzzle\Tests\GuzzleTestCase::setServiceBuilder(Aws\Common\Aws::factory($_SERVER['CONFIG']));
+
+    Guzzle\Tests\GuzzleTestCase::setServiceBuilder(Guzzle\Service\Builder\ServiceBuilder::factory(array(
         'test.unfuddle' => array(
             'class' => 'Guzzle.Unfuddle.UnfuddleClient',
             'params' => array(
@@ -109,11 +106,11 @@ Mock responses can be used to test if requests are being generated correctly and
 
 After queueing mock responses for a client, you can get an array of the requests that were sent by the client that were issued a mock response by calling ``$this->getMockedRequests()``.
 
-You can also use the ``Guzzle\Http\Plugin\MockPlugin`` object directly with your clients.
+You can also use the ``Guzzle\Plugin\Mock\MockPlugin`` object directly with your clients.
 
 .. code-block:: php
 
-    $plugin = new Guzzle\Http\Plugin\MockPlugin();
+    $plugin = new Guzzle\Plugin\Mock\MockPlugin();
     $plugin->addResponse(new Guzzle\Http\Message\Response(200));
     $client = new Guzzle\Http\Client();
     $client->addSubscriber($plugin);

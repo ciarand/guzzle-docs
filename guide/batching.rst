@@ -7,7 +7,9 @@ Guzzle provides a fairly generic and very customizable batching framework that a
 Sending requests and commands in parallel
 -----------------------------------------
 
-You can send HTTP requests in parallel by passing an array of ``Guzzle\Http\Message\RequestInterface`` objects to ``Guzzle\Http\Client::send()``::
+You can send HTTP requests in parallel by passing an array of ``Guzzle\Http\Message\RequestInterface`` objects to ``Guzzle\Http\Client::send()``:
+
+.. code-block:: php
 
     $responses = $client->send(array(
         $client->get('http://www.example.com/foo'),
@@ -15,7 +17,9 @@ You can send HTTP requests in parallel by passing an array of ``Guzzle\Http\Mess
         $client->get('http://www.example.com/bar')
     ));
 
-You can send commands in parallel by passing an array of ``Guzzle\Service\Command\CommandInterface`` objects ``Guzzle\Service\Client::execute()``::
+You can send commands in parallel by passing an array of ``Guzzle\Service\Command\CommandInterface`` objects ``Guzzle\Service\Client::execute()``:
+
+.. code-block:: php
 
     $commands = $client->execute(array(
         $client->getCommand('foo'),

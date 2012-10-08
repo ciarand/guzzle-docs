@@ -455,3 +455,14 @@ Plugins for common HTTP request behavior
 Guzzle provides easy to use request plugins that add behavior to requests based on signal slot event notifications.
 
 View the plugin documention here: :doc:`Guzzle Plugins </guide/plugins>`
+
+Cookies
+-------
+
+Cookies can be modified and retrieved from a request using the following methods:
+* addCookie($name, $value)
+* getCookie($name)
+* getCookies()
+* removeCookie($name)
+
+Use the :doc:`cookie plugin </guide/plugins>` if you need to reuse cookies between requests.
