@@ -151,7 +151,7 @@ location         The location in which the parameter will be added to the       
                  generated request.                                                 ``location="header:X-Header"``
 location_key     Key specifying where the location should be applied. For example,  ``location_key="X-Header"``
                  this key can be used to specify a specific query string value
-                 name or header to use if the name of the parameter differs from 
+                 name or header to use if the name of the parameter differs from
                  the place in which the location value should be applied.
 type             Type of variable (array, boolean, class, date, enum, float,        ``type="class:Guzzle\Common\Collection"``
                  integer, regex, string, timestamp). Some type commands accept

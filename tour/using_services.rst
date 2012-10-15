@@ -68,7 +68,7 @@ A service builder configuration array contains two top-level array keys:
     * extends: The name of a previously defined service to extend from
     * params: Associative array of parameters to pass to the factory method of the service it is instantiated
 
-The first client defined, ``abstract.foo``, is an **abstract client** that can be used by other clients to share configuration values among a number of clients. This can be useful when clients share the same username and password.
+The first client defined, ``abstract.foo``, is used as a placeholder of shared configuration values. Any service extending abstract.foo will inherit its params. As an example, this can be useful when clients share the same username and password.
 
 The next client, ``bar``, extends from ``abstract.foo`` using the ``extends`` attribute referencing the client from which to extend. Additional parameters can be merged into the original service definition when extending a parent service. Each client that you intend to instantiate must specify a ``class`` attribute that references the full class name of the client being created.
 
@@ -135,6 +135,8 @@ If one of your clients depends on another client as one of its parameters, you c
         }
     }
 
+When ``client`` is constructed by the service builder, the service builder will first create the ``token`` service and then inject the token service into ``client``'s factory method in the ``token_client`` parameter.
+
 Using Client objects
 --------------------
 
@@ -149,7 +151,9 @@ Executing commands using a client
 
 Commands are used to take action on a web service and format the response from the web service into something useful.
 
-Commands can be instantiated and configured by a client by calling the ``getCommand()`` method on a client and using the short form of a command's name. The short form of a command's name is calculated based on the folder hierarchy of a command and converting the CamelCased named commands into snake_case. Here are some examples on how the command names are calculated:
+Commands can be instantiated and configured by a client by calling the ``getCommand()`` method on a client and using the command's name.
+
+By default, a client will attempt to find concrete command classes using the short form of a command's name. This is calculated based on the folder hierarchy of a command and converting the CamelCased named commands into snake_case. Here are some examples on how the command names are calculated:
 
 #. ``Foo\Command\JarJar`` **->** jar_jar
 #. ``Foo\Command\Test`` **->** test
@@ -172,6 +176,11 @@ You can take some shortcuts in your code by passing key-value pair arguments to 
 
     $result = $client->getCommand('jar_jar', array('mesa' => 'address_senate'))->execute();
 
+.. note::
+
+    The format and notation used to retrieve commands from a client can be customized by injecting a custom command factory, ``Guzzle\Service\Command\Factory\FactoryInterface``, on the client using
+    ``$client->setCommandFactory()``.
+
 Special command options
 ^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -184,7 +193,6 @@ Command results can contain various types based on the command's implementation.
     * raw: Does not processing on the result and the result will simply be a ``Guzzle\Http\Message\Response`` object.
     * native: Will convert JSON responses into arrays and XML responses into SimpleXMLElement objects.
     * model: Will attempt to use the associated responseClass model of the operation and the result will be a ``Guzzle\Service\Resource\Model`` object. This is the default setting, and if no model is found, Guzzle attempts to return a native response. If no native response can be used, then Guzzle will set the result to raw response.
-    * model_array: Same as model, but instead of instantiating a Model object, the result contain an associative array of model data.
 
 .. note::
 

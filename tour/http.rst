@@ -459,10 +459,11 @@ View the plugin documention here: :doc:`Guzzle Plugins </guide/plugins>`
 Cookies
 -------
 
-Cookies can be modified and retrieved from a request using the following methods:
-* addCookie($name, $value)
-* getCookie($name)
-* getCookies()
-* removeCookie($name)
+Cookies can be modified and retrieved from a request using the following methods::
+
+    $request->addCookie($name, $value);
+    $request->removeCookie($name);
+    $value = $request->getCookie($name);
+    $valueArray = $request->getCookies();
 
 Use the :doc:`cookie plugin </guide/plugins>` if you need to reuse cookies between requests.

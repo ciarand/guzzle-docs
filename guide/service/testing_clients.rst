@@ -22,7 +22,7 @@ Your web service client should have a tests/ folder that contains a bootstrap.ph
 
 .. code-block:: php
 
-Guzzle\Tests\GuzzleTestCase::setServiceBuilder(Aws\Common\Aws::factory($_SERVER['CONFIG']));
+    Guzzle\Tests\GuzzleTestCase::setServiceBuilder(Aws\Common\Aws::factory($_SERVER['CONFIG']));
 
     Guzzle\Tests\GuzzleTestCase::setServiceBuilder(Guzzle\Service\Builder\ServiceBuilder::factory(array(
         'test.unfuddle' => array(
@@ -35,11 +35,7 @@ Guzzle\Tests\GuzzleTestCase::setServiceBuilder(Aws\Common\Aws::factory($_SERVER[
         )
     )));
 
-The above code registers a service builder that can be used throughout your unit tests.  You would then be able to retrieve an instantiated and configured Unfuddle client by calling ``$this->getServiceBuilder()->get('test.unfuddle)``.
-
-.. note::
-
-    A default bootstrap.php file will be generated for you if you use the guzzle client template
+The above code registers a service builder that can be used throughout your unit tests.  You would then be able to retrieve an instantiated and configured Unfuddle client by calling ``$this->getServiceBuilder()->get('test.unfuddle)``. The above code assumes that ``$_SERVER['CONFIG']`` contains the path to a file that stores service description configuration.
 
 Unit testing remote APIs
 ------------------------
@@ -71,6 +67,9 @@ If API  credentials are required to run your integration tests, you must add ``<
     <?xml version="1.0" encoding="UTF-8"?>
     <phpunit bootstrap="./tests/bootstrap.php" colors="true">
         <php>
+            <!-- Specify the path to a service configuration file -->
+            <server name="CONFIG" value="test_services.json" />
+            <!-- Or, specify each require parameter individually -->
             <server name="API_USER" value="change_me" />
             <server name="API_PASSWORD" value="****" />
         </php>

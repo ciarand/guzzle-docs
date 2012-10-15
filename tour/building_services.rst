@@ -90,7 +90,7 @@ Let's start get started on our client. First we will extend the ``Guzzle\Service
             $client = new self($config->get('base_url'), $config);
             // Attach a service description to the client
             $client->setDescription(__DIR__ . '/client.php');
-            
+
             return $client;
         }
     }
@@ -102,7 +102,7 @@ Commands
 
 Commands can be created in one of two ways: create a concrete command class that extends ``Guzzle\Service\Command\AbstractCommand`` or :doc:`create an OperationCommand based on a service description </guide/service/service_descriptions>`. The recommended approach is to use a service description to define your web service, but use concrete commands when custom logic must be implemented for marshaling or unmarshaling an HTTP message.
 
-Commands are the method in which you abstract away the underlying format of the requests that need to be sent to take action on a web service. Commands in Guzzle are meant to be built by executing a series of setter methods on a command object. Commands are only validated when they are being executed. A ``Guzzle\Service\Client`` object is responsible for executing commands. Commands created for your web service must implement ``Guzzle\Service\Command\CommandInterface``, but it's easier to extend the ``Guzzle\Service\Command\AbstractCommand`` class and implement the ``build()`` method, and optionally the ``process()`` method. 
+Commands are the method in which you abstract away the underlying format of the requests that need to be sent to take action on a web service. Commands in Guzzle are meant to be built by executing a series of setter methods on a command object. Commands are only validated when they are being executed. A ``Guzzle\Service\Client`` object is responsible for executing commands. Commands created for your web service must implement ``Guzzle\Service\Command\CommandInterface``, but it's easier to extend the ``Guzzle\Service\Command\AbstractCommand`` class and implement the ``build()`` method, and optionally the ``process()`` method.
 
 The ``build()`` method of a command is responsible for using the arguments of the command to build a HTTP request and set the request on the $request property of the command object. This step is usually taken care of for you when using a service description driven command that uses the default ``Guzzle\Service\Command\OperationCommand``. You may wish to implement the process method yourself when you aren't using a service description or need to implement a more complex command. When implementing a custom build method, be sure to set the class property of ``$this->request`` to an instantiated and ready to send request.
 
