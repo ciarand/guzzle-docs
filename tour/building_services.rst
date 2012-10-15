@@ -111,7 +111,9 @@ The ``process()`` method of a command is responsible for converting an HTTP resp
 Operations
 ----------
 
-Operations are owned by commands to describe the operation, including acceptable parameters, the result of the command, the operation name, HTTP method, description of the operation, etc.. Operations are automatically associated with a command object when using a service description driven client. When not using a service description, it is not necessary to create and associate a ``Guzzle\Service\Description\OperationInterface`` object with a command, but it is highly encouraged to make clients easier to use. A default operation object containing almost no information is instantiated by default when using the ``Guzzle\Service\Command\AbstractCommand``. You can create and use a customized operation object with a command by extending the ``createOperation`` method of the AbstractCommand and returning an instantiated ``Guzzle\Service\Description\OperationInterface`` object.
+Operations are owned by commands to describe the operation, including acceptable parameters, the result of the command, the operation name, HTTP method, description of the operation, etc.. Operations are automatically associated with a command object when using a service description driven client.
+
+When not using a service description, it is not necessary to create and associate a ``Guzzle\Service\Description\OperationInterface`` object with a command, but it is highly encouraged because it makes commands and their capabilities more discoverable. A default operation object containing almost no information is instantiated by default when using the ``Guzzle\Service\Command\AbstractCommand``. You can create and use a customized operation object with a command by extending the ``createOperation`` method of the AbstractCommand and returning an instantiated ``Guzzle\Service\Description\OperationInterface`` object.
 
 Information on creating service descriptions and defining operations can be found in the :doc:`service description </guide/service/service_descriptions>` chapter.
 
@@ -121,6 +123,13 @@ Iterating over resources
 Web services often implement pagination in their responses. Users of your web service client should not be responsible for implementing the logic involved in iterating through pages of results. Guzzle provides a simple resource iterator foundation to make it easier on web service client developers to offer a useful abstraction layer.
 
 See the guide on :doc:`Resource Iterators </guide/service/resource_iterators>` for more information on creating resource iterators for your client.
+
+Batch operations
+----------------
+
+Some web services provide special operations used to perform operations in bulk. For example, a service might allow you to delete a single object at a time using the DELETE method, but allows you to delete multiple objects by sending a single POST request with a body specifying the objects to delete. In situations like this, you should consider implementing custom batching objects to provide a simple way for your users to benefit from the performance increase without needing to implement must custom code in their applications.
+
+See the guide on :doc:`Batching </guide/batching>` for more information on creating custom batching strategies for your client.
 
 Unit test your service
 ----------------------
