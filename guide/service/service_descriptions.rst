@@ -166,6 +166,8 @@ Service descriptions are comprised of the following top-level attributes:
 +------------------+-----------------------------------------------------------------------------------------------------------------------+
 | models           | Hash of models used by the service represented in JSON Schema format                                                  |
 +------------------+-----------------------------------------------------------------------------------------------------------------------+
+| extends          | (optional) Path to a service description file to extend (can be a .json, .js, or .php file)                           |
++------------------+-----------------------------------------------------------------------------------------------------------------------+
 
 baseUrl
 ~~~~~~~
@@ -234,7 +236,7 @@ Parameters in both operations and models are represented using the `JSON schema 
 | description:          | (string) Documentation of the parameter                                                              |
 +-----------------------+------------------------------------------------------------------------------------------------------+
 | location              | (string) The location of a request used to apply a parameter. Custom locations can be registered     |
-|                       | with a command, but the defaults are uri, query, header, body, json, postField, postFile.            |
+|                       | with a command, but the defaults are uri, query, header, body, json, xml, postField, postFile.       |
 +-----------------------+------------------------------------------------------------------------------------------------------+
 | sentAs                | (string) Specifies how the data being modeled is sent over the wire. For example, you may wish       |
 |                       | to include certain headers in a response model that have a normalized casing of FooBar, but the      |
@@ -282,13 +284,48 @@ Parameters in both operations and models are represented using the `JSON schema 
 +-----------------------+------------------------------------------------------------------------------------------------------+
 | format                | (string) Format used to coax a value into the correct format when serializing or unserializing.      |
 |                       | You may specify either an array of filters OR a format, but not both.                                |
-|                       | Supported values: date-time, date, time, timestamp, date-time-http, url-encoded, raw-url-encoded     |
+|                       | Supported values: date-time, date, time, timestamp, date-time-http                                   |
 +-----------------------+------------------------------------------------------------------------------------------------------+
 | $ref                  | (string) String referencing a service description model. The parameter is replaced by the            |
 |                       | schema contained in the model.                                                                       |
 +-----------------------+------------------------------------------------------------------------------------------------------+
 
+location
+^^^^^^^^
+
+The location field of top-level parameters control how a parameter is serialized when generating a request.
+
+- ``uri`` parameters are injected into any matching URI template value of an operation
+- ``query`` parameters are injected into the query string of a request. Query values can be nested, which would result in a PHP style nested query string.
+- ``header`` parameters are injected as headers on an HTTP request. Headers that are of type ``object`` will be added as multiple headers to a request using the key of the input array as the header key. Setting a ``sentAs`` attribute along with a type ``object`` will use the value of ``sentAs`` as a prefix for each header key.
+- ``body`` parameters are injected as the body of a request. The input of these parameters may be anything that can be cast to a string or a ``Guzzle\Http\EntityBodyInterface`` object
+- ``postField`` parameters are inserted as POST fields in a request. Nested values may be supplied.
+- ``postFile`` parameters are added as POST files. A postFile value may be a string pointing to a local filename or a ``Guzzle\Http\Message\PostFileInterface`` object.
+- ``json`` parameters flag a parameter as a top level key to add to a JSON object in the body. Nested values may be specified, with any number of nested ``Guzzle\Common\ToArrayInterface`` objects.
+- ``xml`` parameters flag a parameter as a top level element to add to an XML document in the body.
+- (no location): If a parameter has no location attribute, then the parameter is simply used as a data value.
+
+.. note::
+
+    Custom locations can be registered as new locations or override default locations if needed.
+
 models
 ~~~~~~
 
 Models are used in service descriptions to provide valuable output to an operation or to share snippets of JSON schemas throughout a service description. Models use the exact syntax and attributes used in parameters.
+
+location
+^^^^^^^^
+
+The location field of top-level parameters in a model tell response parsers how date is retrieved from a response.
+
+- ``statusCode``: Retrieves the status code of the response.
+- ``reasonPhrase``: Retrieves the reason phrase of the response.
+- ``header``: Retrieves a header value from a response.
+- ``body``: Retrieves the body of the response
+- ``json``: Retrieves a top-level parameter from a JSON response object.
+- ``xml``: Retrieves a top-level node from an XML response
+
+.. note::
+
+    Custom locations can be registered as new locations or override default locations if needed.
