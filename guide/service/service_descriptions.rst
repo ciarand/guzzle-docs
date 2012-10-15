@@ -213,8 +213,82 @@ parameters
 
 Parameters in both operations and models are represented using the `JSON schema <http://tools.ietf.org/id/draft-zyp-json-schema-03.html>`_ syntax.
 
++-----------------------+------------------------------------------------------------------------------------------------------+
+| Name                  | Description                                                                                          |
++=======================+======================================================================================================+
+| name                  | (string) Unique name of the parameter                                                                |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| type                  | (string|array) Type of variable (string, number, integer, boolean, object, array, numeric,           |
+|                       | null, any). Types are using for validation and determining the structure of a parameter. You         |
+|                       | can use a union type by providing an array of simple types. If one of the union types matches        |
+|                       | the provided value, then the value is valid.                                                         |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| instanceOf:           | (string) When the type is an object, you can specify the class that the object must implement        |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| required              | (bool) Whether or not the parameter is required                                                      |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| default               | (mixed) Default value to use if no value is supplied                                                 |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| static                | (bool) Set to true to specify that the parameter value cannot be changed from the default            |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| description:          | (string) Documentation of the parameter                                                              |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| location              | (string) The location of a request used to apply a parameter. Custom locations can be registered     |
+|                       | with a command, but the defaults are uri, query, header, body, json, postField, postFile.            |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| sentAs                | (string) Specifies how the data being modeled is sent over the wire. For example, you may wish       |
+|                       | to include certain headers in a response model that have a normalized casing of FooBar, but the      |
+|                       | actual header is x-foo-bar. In this case, sentAs would be set to x-foo-bar.                          |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| filters               | (array) Array of static method names to to run a parameter value through. Each value in the          |
+|                       | array must be a string containing the full class path to a static method or an array of complex      |
+|                       | filter information. You can specify static methods of classes using the full namespace class         |
+|                       | name followed by '::' (e.g. Foo\Bar::baz()). Some filters require arguments in order to properly     |
+|                       | filter a value. For complex filters, use a hash containing a 'method' key pointing to a static       |
+|                       | method, and an 'args' key containing an array of positional arguments to pass to the method.         |
+|                       | Arguments can contain keywords that are replaced when filtering a value: '@value' is replaced        |
+|                       | with the value being validated, '@api' is replaced with the Parameter object.                        |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| properties:           | When the type is an object, you can specify nested parameters                                        |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| additionalProperties: | (array) This attribute defines a schema for all properties that are not explicitly                   |
+|                       | defined in an object type definition. If specified, the value MUST be a schema or a boolean. If      |
+|                       | false is provided, no additional properties are allowed beyond the properties defined in the         |
+|                       | schema. The default value is an empty schema which allows any value for additional properties.       |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| items                 | This attribute defines the allowed items in an instance array, and MUST be a schema or an array      |
+|                       | of schemas. The default value is an empty schema which allows any value for items in the             |
+|                       | instance array.                                                                                      |
+|                       | When this attribute value is a schema and the instance value is an array, then all the items         |
+|                       | in the array MUST be valid according to the schema.                                                  |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| pattern               | When the type is a string, you can specify the regex pattern that a value must match                 |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| enum                  | When the type is a string, you can specify a list of acceptable values                               |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| minItems              | (int) Minimum number of items allowed in an array                                                    |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| maxItems              | (int) Maximum number of items allowed in an array                                                    |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| minLength             | (int) Minimum length of a string                                                                     |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| maxLength             | (int) Maximum length of a string                                                                     |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| minimum               | (int) Minimum value of an integer                                                                    |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| maximum               | (int) Maximum value of an integer                                                                    |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| data                  | (array) Any additional custom data to use when serializing, validating, etc                          |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| format                | (string) Format used to coax a value into the correct format when serializing or unserializing.      |
+|                       | You may specify either an array of filters OR a format, but not both.                                |
+|                       | Supported values: date-time, date, time, timestamp, date-time-http, url-encoded, raw-url-encoded     |
++-----------------------+------------------------------------------------------------------------------------------------------+
+| $ref                  | (string) String referencing a service description model. The parameter is replaced by the            |
+|                       | schema contained in the model.                                                                       |
++-----------------------+------------------------------------------------------------------------------------------------------+
 
 models
 ~~~~~~
 
-Models are used in service descriptions to provide valuable output to an operation or to share snippets of JSON schemas throughout the service description.
+Models are used in service descriptions to provide valuable output to an operation or to share snippets of JSON schemas throughout a service description. Models use the exact syntax and attributes used in parameters.
