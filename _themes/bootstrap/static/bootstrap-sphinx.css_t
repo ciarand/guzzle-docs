@@ -82,7 +82,7 @@ div.documentwrapper {
   {%- endif %}
 {%- endblock %}
 
-.prettyprint, .highlight pre {
+pre.prettyprint, .prettyprint, .highlight pre {
     background-color: #eee;
     padding: 7px 30px;
     overflow: auto;
