@@ -1,38 +1,38 @@
 {% extends "basic/layout.html" %}
 {% set script_files = script_files + ['_static/prettify/prettify.js'] %}
-{% set css_files = ['_static/bootstrap.css?v=4', '_static/bootstrap-sphinx.css?v=7', '_static/prettify/prettify.css?v=3'] + css_files %}
+{% set css_files = ['_static/bootstrap.css?v=5', '_static/bootstrap-sphinx.css?v=8', '_static/prettify/prettify.css?v=4'] + css_files %}
 
 {# Sidebar: Rework into our Boostrap nav section. #}
 {% macro navBar() %}
-  <div class="topbar">
-    <div class="topbar-inner">
-      <div class="container">
-        <a class="brand" href="{{ pathto(master_doc) }}">{{ shorttitle|e }}</a>
-        <ul class="nav">
-          <li>
-            <a href="{{ pathto(master_doc) }}">Home</a>
-          </li>
-          <li>
-            <a href="{{ pathto('docs') }}">Docs</a>
-          </li>
-          <li>
-            <a href="https://github.com/guzzle/guzzle">GitHub</a>
-          </li>
-          <li>
-            <a href="https://groups.google.com/forum/?hl=en#!forum/guzzle">Forum</a>
-          </li>
-          <li>
-            <a href="irc:irc.freenode.com/#guzzlephp">IRC</a>
-          </li>
-        </ul>
-        <ul class="nav secondary-nav">
-          {% block sidebarsearch %}
-            {% include "searchbox.html" %}
-          {% endblock %}
-        </ul>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="{{ pathto(master_doc) }}">{{ shorttitle|e }}</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="">
+                <a href="{{ pathto(master_doc) }}">Home</a>
+              </li>
+              <li class="">
+                <a href="{{ pathto('docs') }}">Docs</a>
+              </li>
+              <li class="">
+                <a href="https://github.com/guzzle/guzzle">GitHub</a>
+              </li>
+              <li class="">
+                <a href="https://groups.google.com/forum/?hl=en#!forum/guzzle">Forum</a>
+              </li>
+              <li>
+                <a href="irc:irc.freenode.com/#guzzlephp">IRC</a>
+              </li>
+            </ul>
+            {% block sidebarsearch %}
+              {% include "searchbox.html" %}
+            {% endblock %}
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 {% endmacro %}
 
 {%- block extrahead %}
@@ -87,9 +87,6 @@
     // Patch the global and local TOC's to be bootstrap-compliant.
     patchToc($("span.globaltoc"), 1);
     patchToc($("span.localtoc"), 2);
-
-    // Activate.
-    $('#topbar').dropdown();
   });
 }());
 </script>
@@ -103,23 +100,23 @@
 {%- block relbar2 %}{% endblock %}
 
 {%- block content %}
-<div class="container">
-   {% if pagename == 'index' %}
-     {% block relbar1 %}{% endblock %}
-     {% include "home.html" %}
-   {% else %}
-     {% if pagename != 'search' %}
-       {% include "docs-left.html" %}
-     {% endif %}
-     <div class="content">
-       {% block body %} {% endblock %}
-       {% if pagename != 'search' %}
-         {% include "relations.html" %}
-         {% include "comments.html" %}
-       {% endif %}
-     </div>
-   {% endif %}
-</div>
+  {% if pagename == 'index' %}
+    {% block relbar1 %}{% endblock %}
+    {% include "home.html" %}
+  {% else %}
+    <div class="container">
+      {% if pagename != 'search' %}
+        {% include "docs-left.html" %}
+      {% endif %}
+      <div class="content">
+        {% block body %} {% endblock %}
+        {% if pagename != 'search' %}
+          {% include "relations.html" %}
+          {% include "comments.html" %}
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
 {%- endblock %}
 
 {% block sidebartoc %}
