@@ -8,7 +8,7 @@ Guzzle can leverage HTTP's caching specifications using the ``Guzzle\Plugin\Cach
 
     use Doctrine\Common\Cache\ArrayCache;
     use Guzzle\Http\Client;
-    use Guzzle\Common\Cache\DoctrineCacheAdapter;
+    use Guzzle\Cache\DoctrineCacheAdapter;
     use Guzzle\Plugin\Cache\CachePlugin;
 
     $adapter = new DoctrineCacheAdapter(new ArrayCache());
@@ -98,7 +98,7 @@ Doctrine
 .. code-block:: php
 
     use Doctrine\Common\Cache\ArrayCache;
-    use Guzzle\Common\Cache\DoctrineCacheAdapter;
+    use Guzzle\Cache\DoctrineCacheAdapter;
     use Guzzle\Plugin\Cache\CachePlugin;
 
     $backend = new ArrayCache();
@@ -110,7 +110,7 @@ Zend Framework
 
 .. code-block:: php
 
-    use Guzzle\Common\Cache\ZendCacheAdapter;
+    use Guzzle\Cache\ZendCacheAdapter;
     use Zend\Cache\Backend\TestBackend;
 
     $backend = new TestBackend();
