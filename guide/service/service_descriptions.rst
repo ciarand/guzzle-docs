@@ -319,7 +319,7 @@ Models are used in service descriptions to provide valuable output to an operati
 location
 ^^^^^^^^
 
-The location field of top-level parameters in a model tell response parsers how date is retrieved from a response.
+The location field of top-level parameters in a model tell response parsers how data is retrieved from a response.
 
 - ``statusCode``: Retrieves the status code of the response.
 - ``reasonPhrase``: Retrieves the reason phrase of the response.
