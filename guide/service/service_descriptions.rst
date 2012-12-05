@@ -193,6 +193,8 @@ Operations are comprised of the following attributes:
 | uri              | (string) URI of the operation. The uri attribute can contain URI templates. The variables of the URI template are     |
 |                  | parameters of the operation with a location value of ``uri``                                                          |
 +------------------+-----------------------------------------------------------------------------------------------------------------------+
+| summary          | (string) Short summary of what the operation does                                                                     |
++------------------+-----------------------------------------------------------------------------------------------------------------------+
 | class            | (string) Custom class to instantiate instead of the default ``Guzzle\Service\Command\OperationCommand``               |
 +------------------+-----------------------------------------------------------------------------------------------------------------------+
 | responseClass    | (string) This is what is returned from the method. Can be a primitive, PSR-0 compliant class name, or model name.     |
