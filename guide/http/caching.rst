@@ -41,6 +41,8 @@ You can override the number of seconds a cacheable response is stored in the cac
     // If the response to the request is cacheable, then the response will be cached for 100 seconds
     $request->getParams()->set('cache.override_ttl', 100);
 
+If a response doesn't specify any freshness policy, it will be kept in cache for 3600 seconds by default.
+
 Custom caching decision
 ~~~~~~~~~~~~~~~~~~~~~~~
 
