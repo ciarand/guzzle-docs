@@ -90,7 +90,7 @@ Let's start get started on our client. First we will extend the ``Guzzle\Service
 
             $client = new self($config->get('base_url'), $config);
             // Attach a service description to the client
-            $description = ServiceDescription::factory(__DIR__ . '/client.php');
+            $description = ServiceDescription::factory(__DIR__ . '/service.php');
             $client->setDescription($description);
 
             return $client;
