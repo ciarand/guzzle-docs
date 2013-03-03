@@ -240,7 +240,8 @@ Parameters in both operations and models are represented using the `JSON schema 
 | description:          | (string) Documentation of the parameter                                                              |
 +-----------------------+------------------------------------------------------------------------------------------------------+
 | location              | (string) The location of a request used to apply a parameter. Custom locations can be registered     |
-|                       | with a command, but the defaults are uri, query, header, body, json, xml, postField, postFile.       |
+|                       | with a command, but the defaults are uri, query, statusCode, reasonPhrase, header, body, json, xml,  |
+|                       | postField, postFile.                                                                                 |
 +-----------------------+------------------------------------------------------------------------------------------------------+
 | sentAs                | (string) Specifies how the data being modeled is sent over the wire. For example, you may wish       |
 |                       | to include certain headers in a response model that have a normalized casing of FooBar, but the      |
