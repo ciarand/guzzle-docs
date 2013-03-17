@@ -84,7 +84,7 @@ Event hooks
 |                                 |                             |                                  | * response: Response that was set   |
 |                                 +-----------------------------+----------------------------------+-------------------------------------+
 |                                 | curl.callback.progress      | cURL progress event (only        | * request: Request                  |
-|                                 |                             | dispatched when curl.emit_io is  | * handle: CurlHandle                |
+|                                 |                             | dispatched when emit_io is       | * handle: CurlHandle                |
 |                                 |                             | set on a request's curl options  | * download_size: Total download size|
 |                                 |                             |                                  | * downloaded: Bytes downloaded      |
 |                                 |                             |                                  | * upload_size: Total upload bytes   |
