@@ -254,7 +254,7 @@ Parameters in both operations and models are represented using the
 +-----------------------+------------------------------------------------------------------------------------------------------+
 | location              | (string) The location of a request used to apply a parameter. Custom locations can be registered     |
 |                       | with a command, but the defaults are uri, query, statusCode, reasonPhrase, header, body, json, xml,  |
-|                       | postField, postFile.                                                                                 |
+|                       | postField, postFile, response_body                                                                   |
 +-----------------------+------------------------------------------------------------------------------------------------------+
 | sentAs                | (string) Specifies how the data being modeled is sent over the wire. For example, you may wish       |
 |                       | to include certain headers in a response model that have a normalized casing of FooBar, but the      |
@@ -327,6 +327,7 @@ The location field of top-level parameters control how a parameter is serialized
 - ``json`` parameters flag a parameter as a top level key to add to a JSON object in the body. Nested values may be
   specified, with any number of nested ``Guzzle\Common\ToArrayInterface`` objects.
 - ``xml`` parameters flag a parameter as a top level element to add to an XML document in the body.
+- ``response_body`` Allow for an operation parameter to be used as the EntityBody used to store the body of a response.
 - (no location): If a parameter has no location attribute, then the parameter is simply used as a data value.
 
 .. note::
