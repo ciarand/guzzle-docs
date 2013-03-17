@@ -2,12 +2,17 @@
 Service Descriptions
 ====================
 
-Guzzle allows you to create commands for your web service client based on a document called a service description. As seen in :doc:`Building Web Service Clients </tour/building_services>`, Guzzle web service clients execute commands on a web service. Service descriptions make it easy to define a web service that can be consumed directly by a Guzzle client or used to produce documentation. Service description based clients are encouraged over creating concrete commands for every web service operation.
+Guzzle allows you to create commands for your web service client based on a document called a service description. As
+seen in :doc:`Building Web Service Clients </tour/building_services>`, Guzzle web service clients execute commands on
+a web service. Service descriptions make it easy to define a web service that can be consumed directly by a Guzzle
+client or used to produce documentation. Service description based clients are encouraged over creating concrete
+commands for every web service operation.
 
 Creating a service description
 ------------------------------
 
-Service descriptions can be representing using a PHP array or JSON document. Guzzle's service descriptions are heavily inspired by `Swagger <http://swagger.wordnik.com/>`_.
+Service descriptions can be representing using a PHP array or JSON document. Guzzle's service descriptions are heavily
+inspired by `Swagger <http://swagger.wordnik.com/>`_.
 
 Let's say you're interacting with a web service called 'Foo' that allows for the following routes and methods::
 
@@ -129,7 +134,8 @@ The following JSON service description implements this simple web service:
         }
     }
 
-If you attach this service description to a client, you would completely configure the client to interact with the Foo web service and provide valuable response models for each operation.
+If you attach this service description to a client, you would completely configure the client to interact with the
+Foo web service and provide valuable response models for each operation.
 
 .. code-block:: php
 
@@ -172,14 +178,20 @@ Service descriptions are comprised of the following top-level attributes:
 baseUrl
 ~~~~~~~
 
-The ``baseUrl`` attribute, aliased also as ``basePath``, can be used to add a custom baseUrl to a client when the service description is associated with the client. Some clients require custom logic to determine the baseUrl. In those cases, it is best to not include a baseUrl in the service description, but rather allow the factory method of the client to configure the client's baseUrl.
+The ``baseUrl`` attribute, aliased also as ``basePath``, can be used to add a custom baseUrl to a client when the
+service description is associated with the client. Some clients require custom logic to determine the baseUrl. In
+those cases, it is best to not include a baseUrl in the service description, but rather allow the factory method of the
+client to configure the client's baseUrl.
 
-Any operation using a relative URI (e.g. /foo, baz/bar) will generate a URL that extends from the baseUrl attribute of the service description.
+Any operation using a relative URI (e.g. /foo, baz/bar) will generate a URL that extends from the baseUrl attribute of
+the service description.
 
 operations
 ~~~~~~~~~~
 
-Operations are the actions that can be taken on a service. Each operation has a distinct endpoint and HTTP method. Operations are created and referenced by name. For example, if an API has a ``DELETE /users/:id`` operation, a satisfactory operation name might be ``DeleteUser`` with a parameter of ``id`` that is inserted into the URI.
+Operations are the actions that can be taken on a service. Each operation has a distinct endpoint and HTTP method.
+Operations are created and referenced by name. For example, if an API has a ``DELETE /users/:id`` operation, a
+satisfactory operation name might be ``DeleteUser`` with a parameter of ``id`` that is inserted into the URI.
 
 Operations are comprised of the following attributes:
 
@@ -217,7 +229,8 @@ Operations are comprised of the following attributes:
 parameters
 ^^^^^^^^^^
 
-Parameters in both operations and models are represented using the `JSON schema <http://tools.ietf.org/id/draft-zyp-json-schema-03.html>`_ syntax.
+Parameters in both operations and models are represented using the
+`JSON schema <http://tools.ietf.org/id/draft-zyp-json-schema-03.html>`_ syntax.
 
 +-----------------------+------------------------------------------------------------------------------------------------------+
 | Name                  | Description                                                                                          |
@@ -301,12 +314,18 @@ location
 The location field of top-level parameters control how a parameter is serialized when generating a request.
 
 - ``uri`` parameters are injected into any matching URI template value of an operation
-- ``query`` parameters are injected into the query string of a request. Query values can be nested, which would result in a PHP style nested query string.
-- ``header`` parameters are injected as headers on an HTTP request. Headers that are of type ``object`` will be added as multiple headers to a request using the key of the input array as the header key. Setting a ``sentAs`` attribute along with a type ``object`` will use the value of ``sentAs`` as a prefix for each header key.
-- ``body`` parameters are injected as the body of a request. The input of these parameters may be anything that can be cast to a string or a ``Guzzle\Http\EntityBodyInterface`` object
+- ``query`` parameters are injected into the query string of a request. Query values can be nested, which would result
+  in a PHP style nested query string.
+- ``header`` parameters are injected as headers on an HTTP request. Headers that are of type ``object`` will be added
+  as multiple headers to a request using the key of the input array as the header key. Setting a ``sentAs`` attribute
+  along with a type ``object`` will use the value of ``sentAs`` as a prefix for each header key.
+- ``body`` parameters are injected as the body of a request. The input of these parameters may be anything that can
+  be cast to a string or a ``Guzzle\Http\EntityBodyInterface`` object
 - ``postField`` parameters are inserted as POST fields in a request. Nested values may be supplied.
-- ``postFile`` parameters are added as POST files. A postFile value may be a string pointing to a local filename or a ``Guzzle\Http\Message\PostFileInterface`` object.
-- ``json`` parameters flag a parameter as a top level key to add to a JSON object in the body. Nested values may be specified, with any number of nested ``Guzzle\Common\ToArrayInterface`` objects.
+- ``postFile`` parameters are added as POST files. A postFile value may be a string pointing to a local filename or
+  a ``Guzzle\Http\Message\PostFileInterface`` object.
+- ``json`` parameters flag a parameter as a top level key to add to a JSON object in the body. Nested values may be
+  specified, with any number of nested ``Guzzle\Common\ToArrayInterface`` objects.
 - ``xml`` parameters flag a parameter as a top level element to add to an XML document in the body.
 - (no location): If a parameter has no location attribute, then the parameter is simply used as a data value.
 
@@ -317,7 +336,8 @@ The location field of top-level parameters control how a parameter is serialized
 models
 ~~~~~~
 
-Models are used in service descriptions to provide valuable output to an operation or to share snippets of JSON schemas throughout a service description. Models use the exact syntax and attributes used in parameters.
+Models are used in service descriptions to provide valuable output to an operation or to share snippets of JSON
+schemas throughout a service description. Models use the exact syntax and attributes used in parameters.
 
 location
 ^^^^^^^^
