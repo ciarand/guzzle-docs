@@ -156,6 +156,62 @@ with each part of the request referencing the method used to change it::
 | f. **Entity Body**      |  ``$request->setBody('data'); // Only available with PUT, POST, PATCH, DELETE`` |
 +-------------------------+---------------------------------------------------------------------------------+
 
+Query strings
+^^^^^^^^^^^^^
+
+Query string parameters of a request are owned by a request's ``Guzzle\Http\Query`` object that is accessible by
+calling ``$request->getQuery()``. The Query class extends from ``Guzzle\Common\Collection`` and allows you to set one
+or more query string parameters as key value pairs. You can set a parameter on a Query object using the
+``set($key, $value)`` method. Any previously specified value for a key will be overwritten when using ``set()``. Use
+``add($key, $value)`` to add a value to query string object, and in the event of a collision with an existing value at
+a specific key, the value will be converted to an array that contains all of the previously set values.
+
+.. code-block:: php
+
+    $request = new Guzzle\Http\Message\Request('GET', 'http://www.example.com?foo=bar&abc=123');
+
+    $query = $request->getQuery();
+    echo "{$query}\n";
+    //> foo=bar&abc=123
+
+    $query->remove('abc');
+    echo "{$query}\n";
+    //> foo=bar
+
+    $query->set('foo', 'baz');
+    echo "{$query}\n";
+    //> foo=baz
+
+    $query->add('foo', 'bar');
+    echo "{$query}\n";
+    //> foo%5B0%5D=baz&foo%5B1%5D=bar
+
+Whoah! What happened there? When ``foo=bar`` was added to the existing ``foo=baz`` query string parameter, the
+aggregator associated with the Query object was used to help convert multi-value query string parameters into a string.
+Let's disable URL-encoding to better see what's happening.
+
+.. code-block:: php
+
+    $query->useUrlEncoding(false);
+    echo "{$query}\n";
+    //> foo[0]=baz&foo[1]=bar
+
+.. note::
+
+    URL encoding can be disabled by passing false, enabled by passing true, set to use RFC 1738 by passing
+    ``Query::FORM_URLENCODED`` (uses ``urlencode``), or set to RFC 3986 by passing ``Query::RFC_3986`` (this is the
+    default and uses ``rawurlencode``).
+
+As you can see, the multiple values were converted into query string parameters following the default PHP convention of
+adding numerically indexed bracket suffixes to each key (``foo[0]=baz&foo[1]=bar``). The strategy used to convert
+mutli-value parameters into a string can be customized using the ``setAggregator()`` method of the Query class. Guzzle
+ships with the following aggregators by default:
+
+1. ``Guzzle\Http\QueryAggregator\PhpAggregator``: Aggregates using PHP style brackets (e.g. ``foo[0]=baz&foo[1]=bar``)
+2. ``Guzzle\Http\QueryAggregator\DuplicateAggregator``: Performs no aggregation and allows for key value pairs to be
+   repeated in a URL (e.g. ``foo=baz&foo=bar``)
+3. ``Guzzle\Http\QueryAggregator\CommaAggregator``: Aggregates using commas (e.g. ``foo=baz,bar``)
+
 PUT
 ^^^
 
