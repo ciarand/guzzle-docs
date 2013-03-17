@@ -534,10 +534,9 @@ PHP HTTP clients. Persistent connections allows data to be transferred between a
 to reconnect each time a subsequent request is sent, providing a significant performance boost to applications that
 need to send many HTTP requests to the same host. Guzzle implicitly manages persistent connections for all requests.
 
-All HTTP requests sent through Guzzle are sent using the same cURL multi handle. cURL will maintain a cache of
-persistent connections on a multi handle. As long as you do not override the default ``Guzzle\Http\Curl\CurlMulti``
-object in your clients, you will benefit from application-wide persistent connections. More information about cURL's
-internal design and persistent connection handling can be found at http://curl.haxx.se/dev/internals.html.
+All HTTP requests sent using the same client object will use the same cURL multi handle. cURL will maintain a cache of
+persistent connections on a multi handle. More information about cURL's internal design and persistent connection
+handling can be found at http://curl.haxx.se/dev/internals.html.
 
 Low level cURL access
 ~~~~~~~~~~~~~~~~~~~~~

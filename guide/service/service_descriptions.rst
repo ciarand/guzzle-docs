@@ -307,6 +307,8 @@ Parameters in both operations and models are represented using the
 | $ref                  | (string) String referencing a service description model. The parameter is replaced by the            |
 |                       | schema contained in the model.                                                                       |
 +-----------------------+------------------------------------------------------------------------------------------------------+
+| extends               | (string) String referencing a service description model that this parameter should extend from.      |
++-----------------------+------------------------------------------------------------------------------------------------------+
 
 location
 ^^^^^^^^
