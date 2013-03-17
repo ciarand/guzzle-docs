@@ -65,14 +65,22 @@ or special options that alter the client's behavior:
   to use multiple certificates, or ``false`` to disable SSL validation.
 - ``request.params``: Associative array of parameters to apply to the parameter collection of every request created by
   the client.
+- ``command.params``: When using a ``Guzzle\Service\Client`` object, this is an associative array of default options to
+  set on each command created by the client.
 
 .. code-block:: php
 
+    use Guzzle\Http\Client;
+
     $client = new Client('https://api.twitter.com/{version}', array(
         'version' => 'v1.1',
-        'curl.options' => array(CURLOPT_PROXY => 'tcp://localhost:80'),
+        'curl.options' => array(
+            CURLOPT_PROXY => 'tcp://localhost:80'
+        ),
         'ssl.certificate_authority' => 'system',
-        'request.params' => array('foo' => 'bar')
+        'request.params' => array(
+            'foo' => 'bar'
+        )
     ));
 
 Sending requests and using responses
