@@ -1,31 +1,106 @@
-====================
-Guzzle Documentation
-====================
-
-Tour
-----
+.. title:: Guzzle | PHP HTTP client and framework for consuming RESTful web services
 
 .. toctree::
     :hidden:
 
-    tour/index
+    getting-started/overview
+    getting-started/installation
+    getting-started/faq
 
-* :doc:`tour/installation`
-* :doc:`tour/http`
-* :doc:`tour/using_services`
-* :doc:`tour/building_services`
+    tutorial/intro
+    tutorial/easier-to-use
+    tutorial/building-service-description
+    tutorial/using-service-builder
+    tutorial/testing-the-client
 
-Guides
-------
+    http-client/client
+    http-client/request
+    http-client/response
+    http-client/entity-bodies
+    http-client/http-redirects
+    http-client/streaming-responses
+    http-client/advanced-client-configuration
 
-.. toctree::
-    :hidden:
+    plugins/plugins-overview
+    plugins/creating-plugins
+    plugins/async-plugin
+    plugins/backoff-plugin
+    plugins/cache-plugin
+    plugins/cookie-plugin
+    plugins/curl-auth-plugin
+    plugins/history-plugin
+    plugins/log-plugin
+    plugins/md5-validator-plugin
+    plugins/mock-plugin
+    plugins/oauth-plugin
 
-    guide/index.rst
+    webservice-client/webservice-client
+    webservice-client/using-the-service-builder
+    webservice-client/guzzle-service-descriptions
+    webservice-client/guzzle-service-description-schema
 
-.. include:: guide/contents.rst.inc
+    batching/batching
 
-API
----
+    iterators/resource-iterators
+    iterators/guzzle-iterators
 
+    testing/unit-testing.rst
+
+======
+Guzzle
+======
+
+Getting started
+---------------
+
+* :doc:`getting-started/overview`
+* :doc:`getting-started/installation`
+* :doc:`getting-started/faq`
 * `Read the API docs <http://guzzlephp.org/api/index.html>`_
+
+Guzzle and GitHub tutorial
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#. :doc:`tutorial/intro`
+#. :doc:`tutorial/easier-to-use`
+#. :doc:`tutorial/building-service-description`
+#. :doc:`tutorial/using-service-builder`
+#. :doc:`tutorial/testing-the-client`
+
+The HTTP client
+---------------
+
+* :doc:`http-client/client`
+* :doc:`http-client/request`
+* :doc:`http-client/response`
+* :doc:`http-client/entity-bodies`
+* :doc:`http-client/http-redirects`
+* :doc:`http-client/streaming-responses`
+* :doc:`http-client/advanced-client-configuration`
+
+Plugins
+-------
+
+* :doc:`plugins/plugins-overview`
+* :doc:`plugins/creating-plugins`
+
+Available plugins
+~~~~~~~~~~~~~~~~~
+
+.. include:: plugins/plugins-list.rst.inc
+
+The web service client
+----------------------
+
+* :doc:`webservice-client/webservice-client`
+* :doc:`webservice-client/using-the-service-builder`
+* :doc:`webservice-client/guzzle-service-descriptions`
+* :doc:`webservice-client/guzzle-service-description-schema`
+* :doc:`batching/batching`
+* :doc:`iterators/resource-iterators`
+* :doc:`iterators/guzzle-iterators`
+
+Testing
+-------
+
+* :doc:`testing/unit-testing`

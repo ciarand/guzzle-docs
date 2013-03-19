@@ -1,6 +1,6 @@
-================================
-Unit Testing Web Service Clients
-================================
+===========================
+Unit Testing Guzzle clients
+===========================
 
 Guzzle provides several tools that will enable you to easily unit test your web service clients.
 
