@@ -84,11 +84,6 @@ Plugins
 * :doc:`plugins/plugins-overview`
 * :doc:`plugins/creating-plugins`
 
-Available plugins
-~~~~~~~~~~~~~~~~~
-
-.. include:: plugins/plugins-list.rst.inc
-
 The web service client
 ----------------------
 
