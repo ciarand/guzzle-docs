@@ -7,9 +7,13 @@ functionality is a robust framework built on top of the `PHP libcurl bindings <h
 
 The three main parts of the Guzzle HTTP client are:
 
-1. Client (``Guzzle\Http\Client``)
-2. Request objects (``Guzzle\Http\Message\Request``, ``Guzzle\Http\Message\EntityEnclosingRequest``)
-3. Response objects (``Guzzle\Http\Message\Response``)
++---+--------------+----------------------------------------------------------------------------------+
+| 1 | Clients      | ``Guzzle\Http\Client``                                                           |
++---+--------------+----------------------------------------------------------------------------------+
+| 2 | Requests     | ``Guzzle\Http\Message\Request``, ``Guzzle\Http\Message\EntityEnclosingRequest``  |
++---+--------------+----------------------------------------------------------------------------------+
+| 3 | Responses    | ``Guzzle\Http\Message\Response``                                                 |
++---+--------------+----------------------------------------------------------------------------------+
 
 Creating a Client
 -----------------
@@ -69,15 +73,24 @@ Configuration options
 The second argument of the client's constructor is an array of configuration data. This can include URI template data
 or special options that alter the client's behavior:
 
-- ``redirect.disable``: Disable HTTP redirects for every request created by the client.
-- ``curl.options``: Associative array of cURL options to apply to every request created by the client.
-- ``ssl.certificate_authority``: Set to true to use the bundled SSL certificate bundle, ``system`` to use the bundle on
-  your system, a string pointing to a file to use a specific certificate authority, a string pointing to a directory
-  to use multiple certificates, or ``false`` to disable SSL validation.
-- ``request.params``: Associative array of parameters to apply to the parameter collection of every request created by
-  the client.
-- ``command.params``: When using a ``Guzzle\Service\Client`` object, this is an associative array of default options to
-  set on each command created by the client.
++-------------------------------+-------------------------------------------------------------------------------------+
+| ``redirect.disable``          | Disable HTTP redirects for every request created by the client.                     |
++-------------------------------+-------------------------------------------------------------------------------------+
+| ``curl.options``              | Associative array of cURL options to apply to every request created by the client.  |
++-------------------------------+-------------------------------------------------------------------------------------+
+| ``ssl.certificate_authority`` | Set to true to use the bundled SSL certificate bundle, ``system`` to use the bundle |
+|                               | on your system, a string pointing to a file to use a specific certificate           |
+|                               | authority, a string pointing to a directory to use multiple certificates, or        |
+|                               | ``false`` to disable SSL validation.                                                |
++-------------------------------+-------------------------------------------------------------------------------------+
+| ``request.params``            | Associative array of parameters to apply to the parameter collection of every       |
+|                               | request created by the client.                                                      |
++-------------------------------+-------------------------------------------------------------------------------------+
+| ``command.params``            | When using a ``Guzzle\Service\Client`` object, this is an associative array of      |
+|                               | default options to set on each command created by the client.                       |
++-------------------------------+-------------------------------------------------------------------------------------+
+
+Here's an example showing how to set various configuration options.
 
 .. code-block:: php
 

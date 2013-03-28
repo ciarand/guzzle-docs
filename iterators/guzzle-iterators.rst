@@ -14,6 +14,8 @@ pulling out chunks of values from the inner iterator.
 
 .. code-block:: php
 
+    use Guzzle\Iterator\ChunkedIterator;
+
     $inner = new ArrayIterator(range(0, 8));
     $chunkedItertor = new new ChunkedIterator($inner, 10);
 
@@ -34,6 +36,8 @@ This iterator is used to filter values out of the inner iterator. This iterator 
 CallbackFilterIterator is not available.
 
 .. code-block:: php
+
+    use Guzzle\Iterator\FilterIterator;
 
     $inner = new ArrayIterator(range(1, 10));
     $filterIterator = new FilterIterator($inner, function ($value) {
@@ -56,6 +60,8 @@ MapIterator
 This iterator modifies the values of the inner iterator before yielding.
 
 .. code-block:: php
+
+    use Guzzle\Iterator\MapIterator;
 
     $innner = new ArrayIterator(range(0, 3));
 
@@ -80,6 +86,8 @@ by one or more iterator decorators. This decorator proxies missing method calls 
 of the inner iterators can fulfill the call.
 
 .. code-block:: php
+
+    use Guzzle\Iterator\MethodProxyIterator;
 
     $inner = new \ArrayIterator();
     $proxy = new MethodProxyIterator($inner);
