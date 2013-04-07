@@ -2,11 +2,6 @@
 Welcome to Guzzle
 =================
 
-Introduction
-------------
-
-Welcome to the Guzzle documentation.
-
 What is Guzzle?
 ~~~~~~~~~~~~~~~
 

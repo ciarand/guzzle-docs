@@ -22,15 +22,130 @@ Here's an example of gzip compressing a text file then sending the file to a URL
 
     use Guzzle\Http\EntityBody;
 
-    $body = EntityBody::factory(fopen('/path/to/file.txt', 'r'));
-    $body->compress();
+    $body = EntityBody::factory(fopen('/path/to/file.txt', 'r+'));
+    echo $body->read(1024);
+    $body->seek(0, SEEK_END);
+    $body->write('foo');
+    echo $body->ftell();
+    $body->rewind();
+
+    // Send a request using the body
     $response = $client->put('http://localhost:8080/uploads', null, $body)->send();
 
 The body of the request can be specified in the ``Client::put()`` or ``Client::post()``  method, or, you can specify
 the body of the request by calling the ``setBody()`` method of any
 ``Guzzle\Http\Message\EntityEnclosingRequestInterface`` object.
 
-The entity body received from a response is stored in a temp stream by default. If you need the entity body of a
-response to use a destination other than a temporary stream (e.g. FTP, HTTP, a specific file, an open stream), you can
-set the entity body object that will be used to hold the response body by calling ``setResponseBody()`` on any request
-object.
+Compression
+-----------
+
+You can compress the contents of an EntityBody object using the ``compress()`` method. The compress method accepts a
+filter that must match to one of the supported
+`PHP stream filters <http://www.php.net/manual/en/filters.compression.php>`_ on your system (e.g. `zlib.deflate`,
+``bzip2.compress``, etc). Compressing an entity body will stream the entire entity body through a stream compression
+filter into a temporary PHP stream. You can uncompress an entity body using the ``uncompress()`` method and passing
+the PHP stream filter to use when decompressing the stream (e.g. ``zlib.inflate``).
+
+.. code-block:: php
+
+    use Guzzle\Http\EntityBody;
+
+    $body = EntityBody::factory(fopen('/tmp/test.txt', 'r+'));
+    echo $body->getSize();
+    // >>> 1048576
+
+    // Compress using the default zlib.deflate filter
+    $body->compress();
+    echo $body->getSize();
+    // >>> 314572
+
+    // Decompress the stream
+    $body->uncompress();
+    echo $body->getSize();
+    // >>> 1048576
+
+Decorators
+----------
+
+Guzzle provides several EntityBody decorators that can be used to add functionality to an EntityBody at runtime.
+
+IoEmittingEntityBody
+~~~~~~~~~~~~~~~~~~~~
+
+This decorator will emity events when data is read from a stream or written to a stream. Add an event subscriber to the
+entity body's ``body.read`` or ``body.write`` methods to receive notifications when data data is transferred.
+
+.. code-block:: php
+
+    use Guzzle\Common\Event;
+    use Guzzle\Http\EntityBody;
+    use Guzzle\Http\IoEmittingEntityBody;
+
+    $original = EntityBody::factory(fopen('/tmp/test.txt', 'r+'));
+    $body = new IoEmittingEntityBody($original);
+
+    // Listen for read events
+    $body->getEventDispatcher()->addListener('body.read', function (Event $e) {
+        // Grab data from the event
+        $entityBody = $e['body'];
+        // Amount of data retrieved from the body
+        $lengthOfData = $e['length'];
+        // The actual data that was read
+        $data = $e['read'];
+    });
+
+    // Listen for write events
+    $body->getEventDispatcher()->addListener('body.write', function (Event $e) {
+        // Grab data from the event
+        $entityBody = $e['body'];
+        // The data that was written
+        $data = $e['write'];
+        // The actual amount of data that was written
+        $data = $e['read'];
+    });
+
+ReadLimitEntityBody
+~~~~~~~~~~~~~~~~~~~
+
+The ReadLimitEntityBody decorator can be used to transfer a subset or slice of an existing EntityBody object. This can
+be useful for breaking a large file into smaller pieces to be sent in chunks (e.g. Amazon S3's multipart upload API).
+
+.. code-block:: php
+
+    use Guzzle\Http\EntityBody;
+    use Guzzle\Http\ReadLimitEntityBody;
+
+    $original = EntityBody::factory(fopen('/tmp/test.txt', 'r+'));
+    echo $body->getSize();
+    // >>> 1048576
+
+    // Limit the size of the body to 1024 bytes and start reading from byte 2048
+    $body = new ReadLimitEntityBody($original, 1024, 2048);
+    echo $body->getSize();
+    // >>> 1024
+    echo $body->ftell();
+    // >>> 0
+
+CachingEntityBody
+~~~~~~~~~~~~~~~~~
+
+The CachingEntityBody decorator is used to allow seeking over previously read bytes on non-seekable read streams. This
+can be useful when transferring a non-seekable entity body fails due to needing to rewind the stream (for example,
+resulting from a redirect). Data that is read from the remote stream will be buffered in a PHP temp stream so that
+previously read bytes are cached first in memory, then on disk.
+
+.. code-block:: php
+
+    use Guzzle\Http\EntityBody;
+    use Guzzle\Http\CachingEntityBody;
+
+    $original = EntityBody::factory(fopen('http://www.google.com', 'r'));
+    $body = new CachingEntityBody($original);
+
+    $body->read(1024);
+    echo $body->ftell();
+    // >>> 1024
+
+    $body->seek(0);
+    echo $body->ftell();
+    // >>> 0

@@ -21,6 +21,9 @@ You can raise or lower this value using the ``redirect.max`` parameter of a requ
 
     $request->getParams()->set('redirect.max', 2);
 
+Redirect history
+----------------
+
 You can get the full chain of request/response objects that were sent to complete an HTTP transaction using the
 ``getPreviousResponse()`` method of a response object.
 
@@ -32,6 +35,9 @@ You can get the full chain of request/response objects that were sent to complet
         echo "{$response}\n\n";
         $response = $response->getPreviousResponse();
     } while ($response);
+
+Disabling redirects
+-------------------
 
 You can disable redirects on a client by passing a configuration option in the client's constructor:
 
@@ -46,7 +52,7 @@ You can also disable redirects per request:
     $request->getParams()->set('redirect.disable', true);
 
 Redirects and non-repeatable streams
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------------
 
 If you are redirected when sending data from a non-repeatable stream and some of the data has been read off of the
 stream, then you will get a ``Guzzle\Http\Exception\CouldNotRewindStreamException``. You can get around this error by

@@ -32,10 +32,13 @@ with each part of the request referencing the method used to change it::
 Creating requests with a client
 -------------------------------
 
-Client objects are responsible for creating HTTP request objects. The job of actually creating the request objects is
-delegated from a client to a ``Guzzle\Http\Message\RequestFactoryInterface`` object owned by a client. You can modify
-the request classes instantiated by a client by injecting a custom request factory into the client
-(``setRequestFactory()``).
+Client objects are responsible for creating HTTP request objects.
+
+.. note::
+
+    The job of actually creating the request objects is delegated from a client to a
+    ``Guzzle\Http\Message\RequestFactoryInterface`` object owned by a client. You can modify the request classes
+    instantiated by a client by injecting a custom request factory into the client (using ``setRequestFactory()``).
 
 GET requests
 ~~~~~~~~~~~~
@@ -51,14 +54,14 @@ requests are idempotent requests that are typically used to download content (an
     $client = new Client();
 
     // Create a request that has a query string and an X-Foo header
-    $request = $client->get('http://www.amazon.com?test=123', array('X-Foo' => 'Bar'));
+    $request = $client->get('http://www.amazon.com?a=1', array('X-Foo' => 'Bar'));
 
     // Send the request and get the response
     $response = $request->send();
 
 The above code sample will send the following GET request::
 
-    GET /?test=123 HTTP/1.1
+    GET /?a=1 HTTP/1.1
     Host: www.amazon.com
     User-Agent: Guzzle/3.3.1 curl/7.21.4 PHP/5.3.15
     X-Foo: Bar
@@ -75,6 +78,8 @@ retrieving meta information about an entity identified by a Request-URI.
     $client = new Guzzle\Http\Client();
     $request = $client->head('http://www.amazon.com');
     $response = $request->send();
+    echo $response->getContentLength();
+    // >>> Will output the Content-Length header value
 
 The above code sample will send the following HEAD request::
 
@@ -249,7 +254,7 @@ information about the communication options available on the request/response ch
 Custom requests
 ~~~~~~~~~~~~~~~
 
-You can create custom HTTP requests that use non-standard HTTP methods by using the ``createRequest()`` method of a
+You can create custom HTTP requests that use non-standard HTTP methods using the ``createRequest()`` method of a
 client object.
 
 .. code-block:: php
@@ -276,19 +281,19 @@ a specific key, the value will be converted to an array that contains all of the
 
     $query = $request->getQuery();
     echo "{$query}\n";
-    //> foo=bar&abc=123
+    // >>> foo=bar&abc=123
 
     $query->remove('abc');
     echo "{$query}\n";
-    //> foo=bar
+    // >>> foo=bar
 
     $query->set('foo', 'baz');
     echo "{$query}\n";
-    //> foo=baz
+    // >>> foo=baz
 
     $query->add('foo', 'bar');
     echo "{$query}\n";
-    //> foo%5B0%5D=baz&foo%5B1%5D=bar
+    // >>> foo%5B0%5D=baz&foo%5B1%5D=bar
 
 Whoah! What happened there? When ``foo=bar`` was added to the existing ``foo=baz`` query string parameter, the
 aggregator associated with the Query object was used to help convert multi-value query string parameters into a string.
@@ -298,33 +303,45 @@ Let's disable URL-encoding to better see what's happening.
 
     $query->useUrlEncoding(false);
     echo "{$query}\n";
-    //> foo[0]=baz&foo[1]=bar
+    // >>> foo[0]=baz&foo[1]=bar
 
 .. note::
 
     URL encoding can be disabled by passing false, enabled by passing true, set to use RFC 1738 by passing
-    ``Query::FORM_URLENCODED`` (uses ``urlencode``), or set to RFC 3986 by passing ``Query::RFC_3986`` (this is the
-    default and uses ``rawurlencode``).
+    ``Query::FORM_URLENCODED`` (internally uses PHP's ``urlencode`` function), or set to RFC 3986 by passing
+    ``Query::RFC_3986`` (this is the default and internally uses PHP's ``rawurlencode`` function).
 
 As you can see, the multiple values were converted into query string parameters following the default PHP convention of
-adding numerically indexed bracket suffixes to each key (``foo[0]=baz&foo[1]=bar``). The strategy used to convert
+adding numerically indexed square bracket suffixes to each key (``foo[0]=baz&foo[1]=bar``). The strategy used to convert
 mutli-value parameters into a string can be customized using the ``setAggregator()`` method of the Query class. Guzzle
-ships with the following aggregators by default:
+ships with the following query string aggregators by default:
 
 1. ``Guzzle\Http\QueryAggregator\PhpAggregator``: Aggregates using PHP style brackets (e.g. ``foo[0]=baz&foo[1]=bar``)
 2. ``Guzzle\Http\QueryAggregator\DuplicateAggregator``: Performs no aggregation and allows for key value pairs to be
    repeated in a URL (e.g. ``foo=baz&foo=bar``)
 3. ``Guzzle\Http\QueryAggregator\CommaAggregator``: Aggregates using commas (e.g. ``foo=baz,bar``)
 
-Request Headers
----------------
+.. _http-message-headers:
+
+HTTP Message Headers
+--------------------
 
 HTTP message headers are case insensitive, multiple occurrences of any header can be present in an HTTP message
 (whether it's valid or not), and some servers require specific casing of particular headers. Because of this, request
 and response headers are stored in ``Guzzle\Http\Message\Header`` objects. The Header object can be cast as a string,
 counted, or iterated to retrieve each value from the header. Casting a Header object to a string will return all of
-the header values concatenated together using a glue string (typically ', '). Let's take the following example to see
-what is returned.
+the header values concatenated together using a glue string (typically ", ").
+
+A request (and response) object have several methods that allow you to retrieve and modify headers.
+
+* ``getHeaders()``: Get all of the headers of a message as a ``Guzzle\Common\Collection`` object.
+* ``getHeader($header)``: Get a specific header from a message. If the header exists, you'll get a
+  ``Guzzle\Http\Message\Header`` object. If the header does not exist, this methods returns ``null``.
+* ``hasHeader($header)``: Returns true or false based on if the message has a particular header.
+* ``setHeader($header, $value)``: Set a header value and overwrite any previously set value for this header.
+* ``addHeader($header, $value)``: Add a header with a particular name. If a previous value was already set by the same,
+  then the header will contain multiple values.
+* ``removeHeader($header)``: Remove a header by name from the message.
 
 .. code-block:: php
 
@@ -335,11 +352,11 @@ what is returned.
     // setHeader overwrites any existing values
     $request->setHeader('Test', '123');
 
-    // Requests can be cast as a string
+    // Request headers can be cast as a string
     echo $request->getHeader('Foo');
     // >>> bar, baz
     echo $request->getHeader('Test');
-    // >>> "123"
+    // >>> 123
 
     // You can count the number of headers of a particular case insensitive name
     echo count($request->getHeader('foO'));
@@ -347,8 +364,11 @@ what is returned.
 
     // You can iterate over Header objects
     foreach ($request->getHeader('foo') as $header) {
-        echo $header;
+        echo $header . "\n";
     }
+
+    // You can get all of the request headers as a Guzzle\Common\Collection object
+    $headers = $request->getHeaders();
 
     // Missing headers return NULL
     var_export($request->getHeader('Missing'));
@@ -356,6 +376,78 @@ what is returned.
 
     // You can see all of the different variations of a header by calling raw() on the Header
     var_export($request->getHeader('foo')->raw());
+
+Setting the body of a request
+-----------------------------
+
+Requests that can send a body (e.g. PUT, POST, DELETE, PATCH) are instances of
+``Guzzle\Http\Message\EntityEnclosingRequestInterface``. Entity enclosing requests contain several methods that allow
+you to specify the body to send with a request.
+
+Use the ``setBody()`` method of a request to set the body that will be sent with a request. This method accepts a
+string, a resource returned by ``fopen()``, an array, or an instance of ``Guzzle\Http\EntityBodyInterface``. The body
+will then be streamed from the underlying ``EntityBodyInterface`` object owned by the request. When setting the body
+of the request, you can optionally specify a Content-Type header and whether or not to force the request to use
+chunked Transfer-Encoding.
+
+.. code-block:: php
+
+    $request = $client->put('/user.json');
+    $request->setBody('{"foo":"baz"}', 'application/json');
+
+In the above example, the Content-Length of the body can be easily determined and will be automatically added to the
+request. If the Content-Length cannot be determined (i.e. using a PHP ``http://`` stream), then the request will gain
+the ``Transfer-Encoding: chunked`` header.
+
+.. code-block:: php
+
+    $request = $client->put('/user.json');
+    $request->setBody(fopen('http://httpbin.org/get', 'r'));
+
+    // The Content-Type was guessed based on the path of the request
+    echo $request->getHeader('Content-Type');
+    // >>> application/json
+
+    // The Content-Length could not be determined
+    echo $request->getHeader('Transfer-Encoding');
+    // >>> chunked
+
+See :doc:`/http-client/entity-bodies` for more information on entity bodies.
+
+Expect: 100-Continue header
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``Expect: 100-Continue`` header is used to help a client prevent sending a large payload to a server that will
+reject the request. This allows clients to fail fast rather than waste bandwidth sending an erroneous payload. Guzzle
+will automatically add the ``Expect: 100-Continue`` header to a request when the size of the payload exceeds 1MB or if
+the body of the request is not seekable (this helps to prevent errors when a non-seekable body request is redirected).
+
+POST fields and files
+~~~~~~~~~~~~~~~~~~~~~
+
+Any entity enclosing request can send POST style fields and files. This includes POST, PUT, PATCH, and DELETE requests.
+Any request that has set POST fields or files will use cURL's POST message functionality.
+
+.. code-block:: php
+
+    $request = $client->post('/post');
+    // Set an overwrite any previously specified value
+    $request->setPostField('foo', 'bar');
+    // Append a value to any existing values
+    $request->addPostField('foo', 'baz');
+    // Remove a POST field by name
+    $request->removePostField('fizz');
+
+    // Add a file to upload (forces multipart/form-data)
+    $request->addPostFile('my_file', '/path/to/file', 'plain/text');
+    // Remove a POST file by POST key name
+    $request->removePostFile('my_other_file');
+
+.. tip::
+
+    Adding a large number of POST fields to a POST request is faster if you use the ``addPostFields()`` method so that
+    you can add and process multiple fields with a single call. Adding multiple POST files is also faster using
+    ``addPostFiles()``.
 
 Working with cookies
 --------------------
@@ -371,6 +463,35 @@ Cookies can be modified and retrieved from a request using the following methods
 
 Use the :doc:`cookie plugin </plugins/cookie-plugin>` if you need to reuse cookies between requests.
 
+Changing where a response is downloaded
+----------------------------------------
+
+When a request is sent, the body of the response will be stored in a PHP temp stream by default. You can change the
+location in which the response will be downloaded using ``$request->setResponseBody($body)``. This can be useful for
+downloading the contents of a URL to a specific file.
+
+.. code-block:: php
+
+    $body = fopen('/tmp/large_file.mov', 'w');
+    $request = $this->client->get('http://example.com/large.mov');
+    $request->setResponseBody($body);
+    $request->send();
+
+    var_export(file_exists('/tmp/large_file.mov'));
+    // >>> true
+
+You can more easily specify the name of a file to save the contents of the response to by passing a string to
+``setResponseBody()``.
+
+.. code-block:: php
+
+    $request = $this->client->get('http://example.com/large.mov');
+    $request->setResponseBody('/tmp/large_file.mov');
+    $request->send();
+
+    var_export(file_exists('/tmp/large_file.mov'));
+    // >>> true
+
 Custom cURL options
 -------------------
 
@@ -383,19 +504,6 @@ the cURL options collection of a request:
 
     $request->getCurlOptions()->set(CURLOPT_SSL_VERIFYHOST, true);
 
-You can blacklist cURL options and headers from ever being sent by cURL by adding a ``blacklist`` configuration option
-to the ``curl.options`` array of your client. The following example demonstrates how to blacklist the
-``CURLOPT_ENCODING`` option from ever being set on a request and prevents cURL from ever sending an ``Accept`` header
-on any request.
-
-.. code-block:: php
-
-    $client = new Guzzle\Http\Client('https://example.com/', array(
-        'curl.options' => array(
-            'blacklist' => array(CURLOPT_ENCODING, 'header.Accept')
-        )
-    ));
-
 Other special options that can be set in the ``curl.options`` array include:
 
 +-------------------------+---------------------------------------------------------------------------------+
@@ -406,6 +514,37 @@ Other special options that can be set in the ``curl.options`` array include:
 |                         | ``curl.callback.read``, ``curl.callback.write``, and ``curl.callback.progress`` |
 |                         | events.                                                                         |
 +-------------------------+---------------------------------------------------------------------------------+
+
+Timeouts
+~~~~~~~~
+
+cURL provides `several timeout options <http://www.php.net/curl_setopt>`_ that can be used to control the amount of
+time a request will wait before timing out.
+
+* ``CURLOPT_TIMEOUT``: The maximum number of seconds to allow cURL functions to execute.
+* ``CURLOPT_TIMEOUT_MS``: The maximum number of milliseconds to allow cURL functions to execute.
+* ``CURLOPT_CONNECTTIMEOUT``: The number of seconds to wait while trying to connect.
+* ``CURLOPT_CONNECTTIMEOUT_MS``: The number of milliseconds to wait while trying to connect.
+
+You can tell requests to stop waiting for a response after a given number of seconds with the CURLOPT_TIMEOUT
+parameter:
+
+.. code-block:: php
+
+    $request = $client->get('http://www.example.com');
+    // Time out after 5 seconds
+    $request->getCurlOptions()->set(CURLOPT_TIMEOUT, 5);
+
+Proxy settings
+~~~~~~~~~~~~~~
+
+Some corporate networks require that outbound HTTP requests are sent through a proxy. cURL offers several proxy
+specific settings, but the most commonly using setting is ``CURLOPT_PROXY``.
+
+.. code-block:: php
+
+    $request = $client->get('http://www.example.com');
+    $request->getCurlOptions()->set(CURLOPT_PROXY, 'tcp://127.0.0.1:8888');
 
 Dealing with errors
 -------------------
@@ -472,6 +611,6 @@ Connection problems and cURL specific errors can also occur when transferring re
 encounters cURL specific errors while transferring a single request, a ``Guzzle\Http\Exception\CurlException`` is
 thrown with an informative error message and access to the cURL error message.
 
-A ``Guzzle\Common\Exception\ExceptionCollection`` exception is thrown when a cURL specific error occurs while
+A ``Guzzle\Common\Exception\MultiTransferException`` exception is thrown when a cURL specific error occurs while
 transferring multiple requests in parallel. You can then iterate over all of the exceptions encountered during the
 transfer.
