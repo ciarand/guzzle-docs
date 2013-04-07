@@ -27,6 +27,7 @@ merged into the request's URL.
 
     use Guzzle\Http\Client;
 
+    // Create a client and provide a base URL
     $client = new Client('https://api.github.com');
 
     $request = $client->get('/user');
@@ -34,12 +35,15 @@ merged into the request's URL.
     echo $request->getUrl();
     // >>> https://api.github.com/user
 
+    // You must send a request in order for the transfer to occur
     $response = $request->send();
 
     echo $response->getBody();
     // >>> {"type":"User", ...
+
     echo $response->getHeader('Content-Length');
     // >>> 792
+
     $data = $response->json();
     echo $data['type'];
     // >>> User
