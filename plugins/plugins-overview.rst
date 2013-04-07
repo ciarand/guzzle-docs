@@ -39,7 +39,6 @@ Pre-Built plugins
 -----------------
 
 Guzzle provides easy to use request plugins that add behavior to requests based on signal slot event notifications
-powered by the
-`Symfony2 Event Dispatcher component <http://symfony.com/doc/2.0/components/event_dispatcher/introduction.html>`_.
+powered by the Symfony2 Event Dispatcher component.
 
 .. include:: plugins-list.rst.inc

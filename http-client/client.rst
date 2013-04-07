@@ -353,8 +353,6 @@ powered by the
 event listener or subscriber attached to a Client object will automatically be attached to each request created by the
 client.
 
-.. _client-events:
-
 Using the same cookie session for each request
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -371,6 +369,8 @@ created by a client, and each request will use the same cookie session:
 
     // Add the cookie plugin to the client
     $client->addSubscriber($cookiePlugin);
+
+.. _client-events:
 
 Events emitted from a client
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
