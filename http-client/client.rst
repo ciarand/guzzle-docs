@@ -353,9 +353,7 @@ powered by the
 event listener or subscriber attached to a Client object will automatically be attached to each request created by the
 client.
 
-Here is a list of built-in plugins that can be attached to a Client:
-
-.. include:: /plugins/plugins-list.rst.inc
+.. _client-events:
 
 Using the same cookie session for each request
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -373,3 +371,28 @@ created by a client, and each request will use the same cookie session:
 
     // Add the cookie plugin to the client
     $client->addSubscriber($cookiePlugin);
+
+Events emitted from a client
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A ``Guzzle\Http\Client`` object emits the following events:
+
++------------------------------+--------------------------------------------+------------------------------------------+
+| Event name                   | Description                                | Event data                               |
++==============================+============================================+==========================================+
+| client.create_request        | Called when a client creates a request     | * client: The client                     |
+|                              |                                            | * request: The created request           |
++------------------------------+--------------------------------------------+------------------------------------------+
+
+.. code-block:: php
+
+    use Guzzle\Common\Event;
+    use Guzzle\Http\Client;
+
+    $client = new Client();
+
+    // Add a listener that will echo out requests as they are created
+    $client->getEventDispatcher()->addListener('client.create_request', function (Event $e) {
+        echo 'Client object: ' . spl_object_hash($e['client']) . "\n";
+        echo "Request object: {$request}\n";
+    });

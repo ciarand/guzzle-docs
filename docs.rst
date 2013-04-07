@@ -18,7 +18,6 @@
     http-client/response
     http-client/entity-bodies
     http-client/http-redirects
-    http-client/advanced-client-configuration
 
     plugins/plugins-overview
     plugins/creating-plugins
@@ -74,7 +73,6 @@ The HTTP client
 * :doc:`http-client/response`
 * :doc:`http-client/entity-bodies`
 * :doc:`http-client/http-redirects`
-* :doc:`http-client/advanced-client-configuration`
 
 Plugins
 -------

@@ -7,38 +7,30 @@ casting the Response object to a string. Casting the response to a string will r
 as a string too, so this might be an expensive operation if the entity body is stored in a file or network stream. If
 you only want to see the response headers, you can call ``getRawHeaders()``.
 
-Response start line
--------------------
+Response status line
+--------------------
 
-The different parts of a response's start line (the first line of the response HTTP message) are easily retrievable.
+The different parts of a response's `status line <http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6.1>`_
+(the first line of the response HTTP message) are easily retrievable.
 
 .. code-block:: php
 
     $response = $client->get('http://www.amazon.com')->send();
 
-    echo $response->getStatusCode();
-    // >>> 200
-    echo $response->getReasonPhrase();
-    // >>> OK
-    echo $response->getProtocol();
-    // >>> HTTP
-    echo $response->getProtocolVersion();
-    // >>> 1.1
+    echo $response->getStatusCode();      // >>> 200
+    echo $response->getReasonPhrase();    // >>> OK
+    echo $response->getProtocol();        // >>> HTTP
+    echo $response->getProtocolVersion(); // >>> 1.1
 
-You can determine the type of response using several helper methods:
+You can determine the type of the response using several helper methods:
 
 .. code-block:: php
 
-    var_export($response->isSuccessful());
-    // >>> true
-    var_export($response->isInformational());
-    // >>> false
-    var_export($response->isRedirect());
-    // >>> false
-    var_export($response->isClientError());
-    // >>> false
-    var_export($response->isServerError());
-    // >>> false
+    $response->isSuccessful(); // true
+    $response->isInformational();
+    $response->isRedirect();
+    $response->isClientError();
+    $response->isServerError();
 
 Response headers
 ----------------

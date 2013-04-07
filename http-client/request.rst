@@ -395,18 +395,43 @@ chunked Transfer-Encoding.
     $request = $client->put('/user.json');
     $request->setBody('{"foo":"baz"}', 'application/json');
 
-In the above example, the Content-Length of the body can be easily determined and will be automatically added to the
-request. If the Content-Length cannot be determined (i.e. using a PHP ``http://`` stream), then the request will gain
-the ``Transfer-Encoding: chunked`` header.
+Content-Type header
+~~~~~~~~~~~~~~~~~~~
+
+Guzzle will automatically add a Content-Type header to a request if the Content-Type can be guessed based on the file
+extension of the payload being sent or the file extension present in the path of a request.
+
+.. code-block:: php
+
+    $request = $client->put('/user.json', null, '{"foo":"bar"}');
+    // The Content-Type was guessed based on the path of the request
+    echo $request->getHeader('Content-Type');
+    // >>> application/json
+
+    $request = $client->put('/user.json');
+    $request->setBody(fopen('/tmp/user_data.json', 'r'));
+    // The Content-Type was guessed based on the path of the entity body
+    echo $request->getHeader('Content-Type');
+    // >>> application/json
+
+Transfer-Encoding: chunked header
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When sending HTTP requests that contain a payload, you must let the remote server know how to determine when the entire
+message has been sent. This usually is done by supplying a ``Content-Length`` header that tells the origin server the
+size of the body that is to be sent. In some cases, the size of the payload being sent in a request cannot be known
+before initiating the transfer. In these cases (when using HTTP/1.1), you can use the ``Transfer-Encoding: chunked``
+header.
+
+If the Content-Length cannot be determined (i.e. using a PHP ``http://`` stream), then Guzzle will automatically add
+the ``Transfer-Encoding: chunked`` header to the request. You can force chunked transfer encoding by setting the
+Transfer-Encoding header manually or by passing ``true`` to the optional third parameter of
+``EntityEnclosingRequestInterface::setBody()``.
 
 .. code-block:: php
 
     $request = $client->put('/user.json');
     $request->setBody(fopen('http://httpbin.org/get', 'r'));
-
-    // The Content-Type was guessed based on the path of the request
-    echo $request->getHeader('Content-Type');
-    // >>> application/json
 
     // The Content-Length could not be determined
     echo $request->getHeader('Transfer-Encoding');
@@ -421,6 +446,12 @@ The ``Expect: 100-Continue`` header is used to help a client prevent sending a l
 reject the request. This allows clients to fail fast rather than waste bandwidth sending an erroneous payload. Guzzle
 will automatically add the ``Expect: 100-Continue`` header to a request when the size of the payload exceeds 1MB or if
 the body of the request is not seekable (this helps to prevent errors when a non-seekable body request is redirected).
+
+.. note::
+
+    If you find that your larger requests are taking too long to complete, you should first check if the
+    ``Expect: 100-Continue`` header is being sent with the request. Some servers do not respond well to this header,
+    which causes cURL to sleep for `1 second <http://curl.haxx.se/mail/lib-2010-01/0182.html>`_.
 
 POST fields and files
 ~~~~~~~~~~~~~~~~~~~~~
@@ -492,6 +523,14 @@ You can more easily specify the name of a file to save the contents of the respo
     var_export(file_exists('/tmp/large_file.mov'));
     // >>> true
 
+You can specify the name of the file to download to when creating requests with a client:
+
+.. code-block:: php
+
+    $this->client->get('http://example.com/large.mov', null, '/tmp/large_file.mov')->send();
+    var_export(file_exists('/tmp/large_file.mov'));
+    // >>> true
+
 Custom cURL options
 -------------------
 
@@ -538,19 +577,19 @@ parameter:
 Proxy settings
 ~~~~~~~~~~~~~~
 
-Some corporate networks require that outbound HTTP requests are sent through a proxy. cURL offers several proxy
-specific settings, but the most commonly using setting is ``CURLOPT_PROXY``.
+Some networks require that outbound HTTP requests are sent through a proxy. cURL offers several proxy specific
+settings, but the most commonly using setting is ``CURLOPT_PROXY``.
 
 .. code-block:: php
 
     $request = $client->get('http://www.example.com');
     $request->getCurlOptions()->set(CURLOPT_PROXY, 'tcp://127.0.0.1:8888');
 
-Dealing with errors
+Working with errors
 -------------------
 
-Exceptions
-~~~~~~~~~~
+HTTP errors
+~~~~~~~~~~~
 
 Requests that receive a 4xx or 5xx response will throw a ``Guzzle\Http\Exception\BadResponseException``. More
 specifically, 4xx errors throw a ``Guzzle\Http\Exception\ClientErrorResponseException``, and 5xx errors throw a
@@ -614,3 +653,76 @@ thrown with an informative error message and access to the cURL error message.
 A ``Guzzle\Common\Exception\MultiTransferException`` exception is thrown when a cURL specific error occurs while
 transferring multiple requests in parallel. You can then iterate over all of the exceptions encountered during the
 transfer.
+
+Plugins and events
+------------------
+
+Guzzle request objects expose various events that allow you to hook in custom logic. A request object owns a
+``Symfony\Component\EventDispatcher\EventDispatcher`` object that can be accessed by calling
+``$request->getEventDispatcher()``. You can use the event dispatcher to add listeners (a simple callback function) or
+event subscribers (classes that listen to specific events of a dispatcher). You can add event subscribers to a request
+directly by just calling ``$request->addSubscriber($mySubscriber);``.
+
+.. _request-events:
+
+Events emitted from a request
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A ``Guzzle\Http\Message\Request`` and ``Guzzle\Http\Message\EntityEnclosingRequest`` object emit the following events:
+
++------------------------------+--------------------------------------------+------------------------------------------+
+| Event name                   | Description                                | Event data                               |
++==============================+============================================+==========================================+
+| request.before_send          | About to send request                      | * request: Request to be sent            |
++------------------------------+--------------------------------------------+------------------------------------------+
+| request.sent                 | Sent the request                           | * request: Request that was sent         |
+|                              |                                            | * response: Received response            |
++------------------------------+--------------------------------------------+------------------------------------------+
+| request.complete             | Completed a full HTTP transaction          | * request: Request that was sent         |
+|                              |                                            | * response: Received response            |
++------------------------------+--------------------------------------------+------------------------------------------+
+| request.success              | Completed a successful request             | * request: Request that was sent         |
+|                              |                                            | * response: Received response            |
++------------------------------+--------------------------------------------+------------------------------------------+
+| request.error                | Completed an unsuccessful request          | * request: Request that was sent         |
+|                              |                                            | * response: Received response            |
++------------------------------+--------------------------------------------+------------------------------------------+
+| request.exception            | An unsuccessful response was               | * request: Request                       |
+|                              | received.                                  | * response: Received response            |
+|                              |                                            | * exception: BadResponseException        |
++------------------------------+--------------------------------------------+------------------------------------------+
+| request.receive.status_line  | Received the start of a response           | * line: Full response start line         |
+|                              |                                            | * status_code: Status code               |
+|                              |                                            | * reason_phrase: Reason phrase           |
+|                              |                                            | * previous_response: (e.g. redirect)     |
++------------------------------+--------------------------------------------+------------------------------------------+
+| request.set_response         | A response was set on the request (used    | * request: Request                       |
+|                              | when testing, or in some Guzzle plugins    | * response: Response that was set        |
+|                              | like the CachePlugin                       |                                          |
++------------------------------+--------------------------------------------+------------------------------------------+
+| curl.callback.progress       | cURL progress event (only dispatched when  | * handle: CurlHandle                     |
+|                              | `emit_io` is set on a request's curl       | * download_size: Total download size     |
+|                              | options)                                   | * downloaded: Bytes downloaded           |
+|                              |                                            | * upload_size: Total upload bytes        |
+|                              |                                            | * uploaded: Bytes uploaded               |
++------------------------------+--------------------------------------------+------------------------------------------+
+| curl.callback.write          | cURL event called when data is written to  | * request: Request                       |
+|                              | an outgoing stream                         | * write: Data being written              |
++------------------------------+--------------------------------------------+------------------------------------------+
+| curl.callback.read           | cURL event called when data is written to  | * request: Request                       |
+|                              | an incoming stream                         | * read: Data being read                  |
++------------------------------+--------------------------------------------+------------------------------------------+
+
+Here's an example that listens to the ``request.complete`` event of a request and prints the request and response.
+
+.. code-block:: php
+
+    use Guzzle\Common\Event;
+
+    $request = $client->get('http://www.google.com');
+
+    // Echo out the response that was received
+    $request->getEventDispatcher()->addListener('request.complete', function (Event $e) {
+        echo $e['request'] . "\n\n";
+        echo $e['response'];
+    });
