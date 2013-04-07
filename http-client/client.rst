@@ -7,21 +7,22 @@ functionality is a robust framework built on top of the `PHP libcurl bindings <h
 
 The three main parts of the Guzzle HTTP client are:
 
-+---+--------------+----------------------------------------------------------------------------------+
-| 1 | Clients      | ``Guzzle\Http\Client``                                                           |
-+---+--------------+----------------------------------------------------------------------------------+
-| 2 | Requests     | ``Guzzle\Http\Message\Request``, ``Guzzle\Http\Message\EntityEnclosingRequest``  |
-+---+--------------+----------------------------------------------------------------------------------+
-| 3 | Responses    | ``Guzzle\Http\Message\Response``                                                 |
-+---+--------------+----------------------------------------------------------------------------------+
++--------------+-------------------------------------------------------------------------------------------------------+
+| Clients      | ``Guzzle\Http\Client`` (creates and sends requests, associates a response with a request)             |
++--------------+-------------------------------------------------------------------------------------------------------+
+| Requests     | ``Guzzle\Http\Message\Request`` (requests with no body),                                              |
+|              | ``Guzzle\Http\Message\EntityEnclosingRequest`` (requests with a body)                                 |
++--------------+-------------------------------------------------------------------------------------------------------+
+| Responses    | ``Guzzle\Http\Message\Response``                                                                      |
++--------------+-------------------------------------------------------------------------------------------------------+
 
 Creating a Client
 -----------------
 
 Clients create requests, send requests, and set responses on a request object. When instantiating a client object,
-you can pass an optional "base URL" and optional array of configuration options. A base URL is a URI template that
-contains the URL of a remote server. When creating requests with a relative URL, the base URL of a client will be
-merged into the request's URL.
+you can pass an optional "base URL" and optional array of configuration options. A base URL is a
+:ref:`URI template <uri-templates>` that contains the URL of a remote server. When creating requests with a relative
+URL, the base URL of a client will be merged into the request's URL.
 
 .. code-block:: php
 
@@ -81,14 +82,23 @@ or special options that alter the client's behavior:
 | ``redirect.disable``          | Disable HTTP redirects for every request created by the client.                     |
 +-------------------------------+-------------------------------------------------------------------------------------+
 | ``curl.options``              | Associative array of cURL options to apply to every request created by the client.  |
+|                               | if either the key or value of an entry in the array is a string, Guzzle will        |
+|                               | attempt to find a matching defined cURL constant automatically (e.g.                |
+|                               | "CURLOPT_PROXY" will be converted to the constant ``CURLOPT_PROXY``).               |
 +-------------------------------+-------------------------------------------------------------------------------------+
-| ``ssl.certificate_authority`` | Set to true to use the bundled SSL certificate bundle, ``system`` to use the bundle |
-|                               | on your system, a string pointing to a file to use a specific certificate           |
-|                               | authority, a string pointing to a directory to use multiple certificates, or        |
-|                               | ``false`` to disable SSL validation.                                                |
+| ``ssl.certificate_authority`` | Set to true to use the Guzzle bundled SSL certificate bundle (this is used by       |
+|                               | default, or null to use the bundle on your system, a string pointing to a file to   |
+|                               | use a specific certificate file, a string pointing to a directory to use multiple   |
+|                               | certificates, or ``false`` to disable SSL validation (not recommended).             |
+|                               |                                                                                     |
+|                               | When using  Guzzle inside of a phar file, the bundled SSL certificate will be       |
+|                               | extracted to your system's temp folder, and each time a client is created an MD5    |
+|                               | check will be performed to ensure the integrity of the certificate.                 |
 +-------------------------------+-------------------------------------------------------------------------------------+
 | ``request.params``            | Associative array of parameters to apply to the parameter collection of every       |
-|                               | request created by the client.                                                      |
+|                               | request created by the client. Note: parameters are not query string parameters.    |
+|                               | Parameters in this context are simply contextual pieces of data that can be used    |
+|                               | with request collaborators.                                                         |
 +-------------------------------+-------------------------------------------------------------------------------------+
 | ``command.params``            | When using a ``Guzzle\Service\Client`` object, this is an associative array of      |
 |                               | default options to set on each command created by the client.                       |
@@ -102,14 +112,9 @@ Here's an example showing how to set various configuration options.
 
     // Create a client and pass in optional configuration information
     $client = new Client('https://api.twitter.com/{version}', array(
-        'version' => 'v1.1',
-        'curl.options' => array(
-            CURLOPT_PROXY => 'tcp://localhost:80'
-        ),
-        'ssl.certificate_authority' => 'system',
-        'request.params' => array(
-            'foo' => 'bar'
-        )
+        'version'        => 'v1.1',
+        'curl.options'   => array(CURLOPT_PROXY => 'tcp://localhost:80'),
+        'request.params' => array('foo' => 'bar')
     ));
 
 Creating requests with a client
@@ -165,12 +170,14 @@ Client objects create Request objects using a request factory (``Guzzle\Http\Mes
 You can inject a custom request factory into the Client using ``$client->setRequestFactory()``, but you can typically
 rely on a Client's default request factory.
 
+.. _uri-templates:
+
 URI templates
 ~~~~~~~~~~~~~
 
-The ``$uri`` passed to one of the above methods can utilize URI templates. Guzzle supports the entire
-`URI templates RFC <http://tools.ietf.org/html/rfc6570>`_. URI templates add a special syntax to URIs that replace
-template place holders with user defined variables.
+The ``$uri`` passed to one of the client's request creational methods or the base URL of a client can utilize URI
+templates. Guzzle supports the entire `URI templates RFC <http://tools.ietf.org/html/rfc6570>`_. URI templates add a
+special syntax to URIs that replace template place holders with user defined variables.
 
 Every request created by a Guzzle HTTP client passes through a URI template so that URI template expressions are
 automatically expanded:
@@ -344,8 +351,17 @@ Guzzle provides easy to use request plugins that add behavior to requests based 
 powered by the
 `Symfony2 Event Dispatcher component <http://symfony.com/doc/2.0/components/event_dispatcher/introduction.html>`_. Any
 event listener or subscriber attached to a Client object will automatically be attached to each request created by the
-client. This allows you to, for example, attach a ``Guzzle\Plugin\Cookie\CookiePlugin`` to a client which will in turn
-add support for cookies to every request created by a client, and each request will use the same cookie session:
+client.
+
+Here is a list of built-in plugins that can be attached to a Client:
+
+.. include:: /plugins/plugins-list.rst.inc
+
+Using the same cookie session for each request
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Attach a ``Guzzle\Plugin\Cookie\CookiePlugin`` to a client which will in turn add support for cookies to every request
+created by a client, and each request will use the same cookie session:
 
 .. code-block:: php
 
@@ -357,7 +373,3 @@ add support for cookies to every request created by a client, and each request w
 
     // Add the cookie plugin to the client
     $client->addSubscriber($cookiePlugin);
-
-Here is a list of built-in plugins that can be attached to a Client:
-
-.. include:: /plugins/plugins-list.rst.inc
