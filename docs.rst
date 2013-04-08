@@ -7,12 +7,6 @@
     getting-started/installation
     getting-started/faq
 
-    tutorial/intro
-    tutorial/easier-to-use
-    tutorial/building-service-description
-    tutorial/using-service-builder
-    tutorial/testing-the-client
-
     http-client/client
     http-client/request
     http-client/response
@@ -55,15 +49,6 @@ Getting started
 * :doc:`getting-started/installation`
 * :doc:`getting-started/faq`
 * `Read the API docs <http://guzzlephp.org/api/index.html>`_
-
-Guzzle and GitHub tutorial
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-#. :doc:`tutorial/intro`
-#. :doc:`tutorial/easier-to-use`
-#. :doc:`tutorial/building-service-description`
-#. :doc:`tutorial/using-service-builder`
-#. :doc:`tutorial/testing-the-client`
 
 The HTTP client
 ---------------
