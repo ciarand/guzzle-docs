@@ -52,6 +52,63 @@ project. In order to use Guzzle with Composer, you must do the following:
 You can find out more on how to install Composer, configure autoloading, and other best-practices for defining
 dependencies at `getcomposer.org <http://getcomposer.org>`_.
 
+Using only specific parts of Guzzle
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+While you can always just rely on ``guzzle/guzzle``, Guzzle provides several smaller parts of Guzzle as individual
+packages available through Composer.
+
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| Package name                                                                                  | Description                              |
++===============================================================================================+==========================================+
+| `guzzle/common <https://packagist.org/packages/guzzle/common>`_                               | Provides ``Guzzle\Common``               |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/http <https://packagist.org/packages/guzzle/http>`_                                   | Provides ``Guzzle\Http``                 |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/parser <https://packagist.org/packages/guzzle/parser>`_                               | Provides ``Guzzle\Parser``               |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/batch <https://packagist.org/packages/guzzle/batch>`_                                 | Provides ``Guzzle\Batch``                |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/cache <https://packagist.org/packages/guzzle/cache>`_                                 | Provides ``Guzzle\Cache``                |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/inflection <https://packagist.org/packages/guzzle/inflection>`_                       | Provides ``Guzzle\Inflection``           |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/iterator <https://packagist.org/packages/guzzle/iterator>`_                           | Provides ``Guzzle\Iterator``             |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/log <https://packagist.org/packages/guzzle/log>`_                                     | Provides ``Guzzle\Log``                  |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/plugin <https://packagist.org/packages/guzzle/plugin>`_                               | Provides ``Guzzle\Plugin`` (all plugins) |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/plugin-async <https://packagist.org/packages/guzzle/plugin-async>`_                   | Provides ``Guzzle\Plugin\Async``         |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/plugin-backoff <https://packagist.org/packages/guzzle/plugin-backoff>`_               | Provides ``Guzzle\Plugin\BackoffPlugin`` |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/plugin-cache <https://packagist.org/packages/guzzle/plugin-cache>`_                   | Provides ``Guzzle\Plugin\Cache``         |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/plugin-cookie <https://packagist.org/packages/guzzle/plugin-cookie>`_                 | Provides ``Guzzle\Plugin\Cookie``        |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/plugin-curlauth <https://packagist.org/packages/guzzle/plugin-curlauth>`_             | Provides ``Guzzle\Plugin\CurlAuth``      |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/plugin-error-response <https://packagist.org/packages/guzzle/plugin-error-response>`_ | Provides ``Guzzle\Plugin\ErrorResponse`` |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/plugin-history <https://packagist.org/packages/guzzle/plugin-history>`_               | Provides ``Guzzle\Plugin\History``       |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/plugin-log <https://packagist.org/packages/guzzle/plugin-log>`_                       | Provides ``Guzzle\Plugin\Log``           |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/plugin-md5 <https://packagist.org/packages/guzzle/plugin-md5>`_                       | Provides ``Guzzle\Plugin\Md5``           |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/plugin-mock <https://packagist.org/packages/guzzle/plugin-mock>`_                     | Provides ``Guzzle\Plugin\Mock``          |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/plugin-oauth <https://packagist.org/packages/guzzle/plugin-oauth>`_                   | Provides ``Guzzle\Plugin\Oauth``         |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/service <https://packagist.org/packages/guzzle/service>`_                             | Provides ``Guzzle\Service``              |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+| `guzzle/stream <https://packagist.org/packages/guzzle/stream>`_                               | Provides ``Guzzle\Stream``               |
++-----------------------------------------------------------------------------------------------+------------------------------------------+
+
+Bleeding edge
+^^^^^^^^^^^^^
+
 During your development, you can keep up with the latest changes on the master branch by setting the version
 requirement for Guzzle to ``dev-master``.
 
