@@ -150,19 +150,120 @@ concrete commands and operation commands later in this chapter.
 .. code-block:: php
 
     // Get a command from the twitter client.
-    $twitter->getCommand('get_mentions');
+    $command = $twitter->getCommand('getMentions');
+    $result = $command->execute();
 
 Unless you've skipped ahead, running the above code will throw an exception.
 
     PHP Fatal error:  Uncaught exception 'Guzzle\Common\Exception\InvalidArgumentException' with message
-    'Command was not found matching get_mentions'
+    'Command was not found matching getMentions'
 
-This exception was thrown because the "get_mentions" command has not yet been implemented. Let's implement one now.
+This exception was thrown because the "getMentions" command has not yet been implemented. Let's implement one now.
 
 Concrete commands
 ~~~~~~~~~~~~~~~~~
 
+Commands can be created in one of two ways: create a concrete command class that extends
+``Guzzle\Service\Command\AbstractCommand`` or
+:doc:`create an OperationCommand based on a service description <guzzle-service-descriptions>`. The recommended
+approach is to use a service description to define your web service, but you can use concrete commands when custom
+logic must be implemented for marshaling or unmarshaling a HTTP message.
 
+Commands are the method in which you abstract away the underlying format of the requests that need to be sent to take
+action on a web service. Commands in Guzzle are meant to be built by executing a series of setter methods on a command
+object. Commands are only validated right before they are executed. A ``Guzzle\Service\Client`` object is responsible
+for executing commands. Commands created for your web service must implement
+``Guzzle\Service\Command\CommandInterface``, but it's easier to extend the ``Guzzle\Service\Command\AbstractCommand``
+class, implement the ``build()`` method, and optionally implement the ``process()`` method.
+
+Serializing requests
+^^^^^^^^^^^^^^^^^^^^
+
+The ``build()`` method of a command is responsible for using the arguments of the command to build and serialize a
+HTTP request and set the request on the ``$request`` property of the command object. This step is usually taken care of
+for you when using a service description driven command that uses the default
+``Guzzle\Service\Command\OperationCommand``. You may wish to implement the process method yourself when you aren't
+using a service description or need to implement more complex request serialization.
+
+.. important::::
+
+    When implementing a custom ``build()`` method, be sure to set the class property of ``$this->request`` to an
+    instantiated and ready to send request.
+
+The following example shows how to implement the ``getMentions``
+`Twitter API <https://dev.twitter.com/docs/api/1.1/get/statuses/mentions_timeline>`_ method using a concrete command.
+
+.. code-block:: php
+
+    namespace mtdowling\Twitter\Command;
+
+    use Guzzle\Service\Command\AbstractCommand;
+
+    class GetMentions extends AbstractCommand
+    {
+        protected function build()
+        {
+            // Create the request property of the command
+            $this->request = $this->client->get('statuses/mentions_timeline.json');
+
+            // Grab the query object of the request because we will use it for
+            // serializing command parameters on the request
+            $query = $this->request->getQuery();
+
+            if ($this['count']) {
+                $query->set('count', $this['count']);
+            }
+
+            if ($this['since_id']) {
+                $query->set('since_id', $this['since_id']);
+            }
+
+            if ($this['max_id']) {
+                $query->set('max_id', $this['max_id']);
+            }
+
+            if ($this['trim_user'] !== null) {
+                $query->set('trim_user', $this['trim_user'] ? 'true' : 'false');
+            }
+
+            if ($this['contributor_details'] !== null) {
+                $query->set('contributor_details', $this['contributor_details'] ? 'true' : 'false');
+            }
+
+            if ($this['include_entities'] !== null) {
+                $query->set('include_entities', $this['include_entities'] ? 'true' : 'false');
+            }
+        }
+    }
+
+By default, a client will attempt to find concrete command classes under the ``Command`` namespace of a client. First
+the client will attempt to find an exact match for the name of the command to the name of the command class. If an
+exact match is not found, the client will calculate a class name using inflection. This is calculated based on the
+folder hierarchy of a command and converting the CamelCased named commands into snake_case. Here are some examples on
+how the command names are calculated:
+
+#. ``Foo\Command\JarJar`` **->** jar_jar
+#. ``Foo\Command\Test`` **->** test
+#. ``Foo\Command\People\GetCurrentPerson`` **->** people.get_current_person
+
+Notice how any sub-namespace beneath ``Command`` is converted from ``\`` to ``.`` (a period). CamelCasing is converted
+to lowercased snake_casing (e.g. JarJar == jar_jar).
+
+Parsing responses
+^^^^^^^^^^^^^^^^^
+
+The ``process()`` method of a command is responsible for converting an HTTP response into something more useful. For
+example, a service description operation that has specified a model object in the ``responseClass`` attribute of the
+operation will set a ``Guzzle\Service\Resource\Model`` object as the result of the command. This behavior can be
+completely modified as needed-- even if you are using operations and responseClass models. Simply implement a custom
+``process()`` method that sets the ``$this->result`` class property to whatever you choose. You can reuse parts of the
+default Guzzle response parsing functionality or get inspiration from existing code by using
+``Guzzle\Service\Command\OperationResponseParser`` and ``Guzzle\Service\Command\DefaultResponseParser`` classes.
+
+If you do not implement a custom ``process()`` method and are not using a service description, then Guzzle will attempt
+to guess how a response should be processed based on the Content-Type header of the response. Because the Twitter API
+sets a ``Content-Type: application/json`` header on this response, we do not need to implement any custom response
+parsing.
 
 Operation commands
 ~~~~~~~~~~~~~~~~~~
@@ -170,8 +271,91 @@ Operation commands
 Executing commands
 ~~~~~~~~~~~~~~~~~~
 
+You must explicitly execute a command after creating a command using the ``getCommand()`` method. A command has an
+``execute()`` method that may be called, or you can use the ``execute()`` method of a client object and pass in the
+command object. Calling either of these execute methods will return the result value of the command. The result value is
+the result of parsing the HTTP response with the ``process()`` method.
+
+.. code-block:: php
+
+    // Get a command from the client and pass an array of parameters
+    $command = $twitter->getCommand('getMentions', array(
+        'count' => 5
+    ));
+
+    // Other parameters can be set on the command after it is created
+    $command['trim_user'] = false;
+
+    // Execute the command using the command object.
+    // The result value contains an array of JSON data from the response
+    $result = $command->execute();
+
+    // You can retrieve the result of the command later too
+    $result = $command->getResult().
+
+Command object also contains methods that allow you to inspect the HTTP request and response that was utilized with
+the command.
+
+.. code-block:: php
+
+    $request = $command->getRequest();
+    $response = $command->getResponse();
+
+.. note::
+
+    The format and notation used to retrieve commands from a client can be customized by injecting a custom command
+    factory, ``Guzzle\Service\Command\Factory\FactoryInterface``, on the client using ``$client->setCommandFactory()``.
+
+Executing with magic methods
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When using method missing magic methods with a command, the command will be executed right away and the result of the
+command is returned.
+
+.. code-block:: php
+
+    $jsonData = $twitter->getMentions(array(
+        'count'     => 5,
+        'trim_user' => true
+    ));
+
 Sending commands in parallel
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Much like HTTP requests, Guzzle allows you to send mutliple commands in parallel. You can send commands in parallel by
+passing an array of command objects to a client's ``execute()`` method. The client will serialize each request and
+send them all in parallel. If an error is encountered during the transfer, then a
+``Guzzle\Service\Exception\CommandTransferException`` is thrown, which allows you to retrieve a list of commands that
+succeeded and a list of commands that failed.
+
+.. code-block:: php
+
+    use Guzzle\Service\Exception\CommandTransferException;
+
+    $commands = array();
+    $commands[] = $twitter->getCommand('getMentions');
+    $commands[] = $twitter->getCommand('otherCommandName');
+    // etc...
+
+    try {
+        $result = $client->execute($commands);
+        foreach ($result as $command) {
+            echo $command->getName() . ': ' . $command->getResponse()->getStatusCode() . "\n";
+        }
+    } catch (CommandTransferException $e) {
+        // Get an array of the commands that succeeded
+        foreach ($e->getSuccessfulCommands() as $command) {
+            echo $command->getName() . " succeeded\n";
+        }
+        // Get an array of the commands that failed
+        foreach ($e->getFailedCommands() as $command) {
+            echo $command->getName() . " failed\n";
+        }
+    }
+
+.. note::
+
+    All commands executed from a client using an array must originate from the same client.
 
 Special command options
 ~~~~~~~~~~~~~~~~~~~~~~~
