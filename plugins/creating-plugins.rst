@@ -55,6 +55,7 @@ Event hooks
 * ``Guzzle\Service\Client``:
 * :ref:`request-events`
 * ``Guzzle\Http\Curl\CurlMulti``:
+* :ref:`service-builder-events`
 
 Examples of the event system
 ----------------------------
