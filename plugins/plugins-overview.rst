@@ -13,10 +13,10 @@ add a listener or event subscriber.
 Adding event subscribers to clients
 -----------------------------------
 
-Any event subscriber attached to the EventDispatcher of a ``Guzzle\Http\Client`` or ``Guzzle\Service\Client``
-object will automatically be attached to all request objects created by the client. This allows you to attach, for
-example, a HistoryPlugin to a client object, and from that point on, every request sent through that client will
-utilize the HistoryPlugin.
+Any event subscriber or event listener attached to the EventDispatcher of a ``Guzzle\Http\Client`` or
+``Guzzle\Service\Client`` object will automatically be attached to all request objects created by the client. This
+allows you to attach, for example, a HistoryPlugin to a client object, and from that point on, every request sent
+through that client will utilize the HistoryPlugin.
 
 .. code-block:: php
 
@@ -34,6 +34,11 @@ utilize the HistoryPlugin.
 
     // Echo out the last sent request by the client
     echo $history->getLastRequest();
+
+.. tip::
+
+    :doc:`Create event subscribers <creating-plugins>`, or *plugins*, to implement reusable logic that can be
+    shared across clients. Event subscribers are also easier to test than anonymous functions.
 
 Pre-Built plugins
 -----------------

@@ -55,13 +55,18 @@ Base URLs
 Notice that the URL provided to the client's ``get()`` method is relative. Relative URLs will always merge into the
 base URL of the client. There are a few rules that control how the URLs are merged.
 
+.. tip::
+
+    Guzzle follows `RFC 3986 <http://tools.ietf.org/html/rfc3986#section-5.2>`_ when merging base URLs and
+    relative URLs.
+
 In the above example, we passed ``/user`` to the ``get()`` method of the client. This is a relative URL, so it will
 merge into the base URL of the client-- resulting in the derived URL of ``https://api.github.com/users``.
 
 ``/user`` is a relative URL but uses an absolute path because it contains the leading slash. Absolute paths will
 overwrite any existing path of the base URL. If an absolute path is provided (e.g. ``/path/to/something``), then the
 path specified in the base URL of the client will be replaced with the absolute path, and the query string provided
-will replace the query string of the base URL.
+by the relative URL will replace the query string of the base URL.
 
 Omitting the leading slash and using relative paths will add to the path of the base URL of the client. So using a
 client base URL of ``https://api.twitter.com/v1.1`` and creating a GET request with ``statuses/user_timeline.json``

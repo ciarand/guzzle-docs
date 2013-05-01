@@ -360,8 +360,18 @@ succeeded and a list of commands that failed.
 Special command options
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Resource iterators
-------------------
+Guzzle exposes several options that help to control how commands are validated, serialized, and parsed.
+
+=========================== ============================================================================================
+command.headers             Additional ``Collection`` of headers to add to the serialized request
+command.on_complete         Function to execute when the command has been executed and the response has been parsed
+command.disable_validation  Set to true to disable JSON schema validation of the command's input parameters
+command.response_processing Determines how the default response parser will parse the command. One of "raw" no parsing,
+                            "model" (the default method used to parse commands using response models defined in service
+                            descriptions)
+command.response_body       Tells the command object which EntityBody object should be used to store the response body
+                            of a request that will be serialized by the command
+=========================== ============================================================================================
 
 Advanced client configuration
 -----------------------------
@@ -369,11 +379,96 @@ Advanced client configuration
 Default command parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+When creating a client object, you can specify default command parameters to pass into all commands. Any key value pair
+present in the ``command.options`` settings of a client will be added as default parameters to any command created
+by the client.
+
+.. code-block:: php
+
+    $client = new Guzzle\Service\Client(array(
+        'command.options' => array(
+            'default_1' => 'foo',
+            'another'   => 'bar'
+        )
+    ));
+
 Magic methods
 ~~~~~~~~~~~~~
+
+Client objects will, by default, attempt to create and execute commands when a missing method is invoked on a client.
+This powerful concept applies to both concrete commands and operation commands powered by a service description. This
+makes it appear to the end user that you have defined actual methods on a client object, when in fact, the methods are
+invoked using PHP's magic ``__call`` method.
+
+The ``__call`` method uses the ``getCommand()`` method of a client, which uses the client's internal
+``Guzzle\Service\Command\Factory\FactoryInterface`` object. The default command factory allows you to instantiate
+operations defined in a client's service description. The method in which a client determines which command to
+execute is defined as follows:
+
+1. The client will first try to find a literal match for an operation in the service description.
+2. If the literal match is not found, the client will try to uppercase the first character of the operation and find
+   the match again.
+3. If a match is still not found, the command factory will inflect the method name from CamelCase to snake_case and attempt
+   to find a matching command.
+4. If a command still does not match, an exception is thrown.
+
+.. code-block:: php
+
+    // Use the magic method
+    $result = $twitter->getMentions();
+
+    // This is exactly the same as:
+    $result = $twitter->getCommand('getMentions')->execute();
+
+You can disable magic methods on a client by passing ``false`` to the ``enableMagicMethod()`` method.
 
 Custom command factory
 ~~~~~~~~~~~~~~~~~~~~~~
 
+A client by default uses the ``Guzzle\Service\Command\Factory\CompositeFactory`` which allows multiple command
+factories to attempt to create a command by a certain name. The default CompositeFactory uses a ``ConcreteClassFactory``
+and a ``ServiceDescriptionFactory`` if a service description is specified on a client. You can specify a custom
+command factory if your client requires custom command creation logic using the ``setCommandFactory()`` method of
+a client.
+
 Custom resource Iterator factory
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Resource iterators can be retrieved from a client using the ``getIterator($name)`` method of a client. This method uses
+a client's internal ``Guzzle\Service\Resource\ResourceIteratorFactoryInterface`` object. A client by default uses a
+``Guzzle\Service\Resource\ResourceIteratorClassFactory`` to attempt to find concrete classes that implement resource
+iterators. The default factory will first look for matching iterators in the ``Iterator`` subdirectory of the client
+followed by the ``Model`` subdirectory of a client. Use the ``setResourceIteratorFactory()`` method of a client to
+specify a custom resource iterator factory.
+
+Plugins and events
+------------------
+
+``Guzzle\Service\Client`` exposes various events that allow you to hook in custom logic. A client object owns a
+``Symfony\Component\EventDispatcher\EventDispatcher`` object that can be accessed by calling
+``$client->getEventDispatcher()``. You can use the event dispatcher to add listeners (a simple callback function) or
+event subscribers (classes that listen to specific events of a dispatcher).
+
+.. _service-client-events:
+
+Events emitted from a Service Client
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A ``Guzzle\Service\Client`` object emits the following events:
+
++------------------------------+--------------------------------------------+------------------------------------------+
+| Event name                   | Description                                | Event data                               |
++==============================+============================================+==========================================+
+| client.command.create        | The client created a command object        | * client: Client object                  |
+|                              |                                            | * command: Command object                |
++------------------------------+--------------------------------------------+------------------------------------------+
+| command.before_prepare       | The client created a command object        | * command: Command being prepared        |
++------------------------------+--------------------------------------------+------------------------------------------+
+| command.after_prepare        | The client created a command object        | * command: Command that was prepared     |
++------------------------------+--------------------------------------------+------------------------------------------+
+| command.before_send          | The client is about to execute a prepared  | * command: Command to execute            |
+|                              | command                                    |                                          |
++------------------------------+--------------------------------------------+------------------------------------------+
+| command.after_send           | The client successfully completed          | * command: The command that was executed |
+|                              | executing a command                        |                                          |
++------------------------------+--------------------------------------------+------------------------------------------+

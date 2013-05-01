@@ -52,7 +52,7 @@ Event hooks
 -----------
 
 * :ref:`client-events`
-* ``Guzzle\Service\Client``:
+* :ref:`service-client-events`
 * :ref:`request-events`
 * ``Guzzle\Http\Curl\CurlMulti``:
 * :ref:`service-builder-events`

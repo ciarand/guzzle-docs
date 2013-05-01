@@ -602,6 +602,10 @@ BadResponseException to deal with either type of error. Here's an example of cat
         $response = $client->get('/not_found.xml')->send();
     } catch (Guzzle\Http\Exception\BadResponseException $e) {
         echo 'Uh oh! ' . $e->getMessage();
+        echo 'HTTP request URL: ' . $e->getRequest()->getUrl() . "\n";
+        echo 'HTTP request: ' . $e->getRequest() . "\n";
+        echo 'HTTP response status: ' . $e->getResponse()->getStatusCode() . "\n";
+        echo 'HTTP response: ' . $e->getResponse() . "\n";
     }
 
 Throwing an exception when a 4xx or 5xx response is encountered is the default behavior of Guzzle requests. This
@@ -696,10 +700,6 @@ A ``Guzzle\Http\Message\Request`` and ``Guzzle\Http\Message\EntityEnclosingReque
 |                              |                                            | * reason_phrase: Reason phrase           |
 |                              |                                            | * previous_response: (e.g. redirect)     |
 +------------------------------+--------------------------------------------+------------------------------------------+
-| request.set_response         | A response was set on the request (used    | * request: Request                       |
-|                              | when testing, or in some Guzzle plugins    | * response: Response that was set        |
-|                              | like the CachePlugin                       |                                          |
-+------------------------------+--------------------------------------------+------------------------------------------+
 | curl.callback.progress       | cURL progress event (only dispatched when  | * handle: CurlHandle                     |
 |                              | `emit_io` is set on a request's curl       | * download_size: Total download size     |
 |                              | options)                                   | * downloaded: Bytes downloaded           |
@@ -712,6 +712,9 @@ A ``Guzzle\Http\Message\Request`` and ``Guzzle\Http\Message\EntityEnclosingReque
 | curl.callback.read           | cURL event called when data is written to  | * request: Request                       |
 |                              | an incoming stream                         | * read: Data being read                  |
 +------------------------------+--------------------------------------------+------------------------------------------+
+
+Creating a request event listener
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Here's an example that listens to the ``request.complete`` event of a request and prints the request and response.
 
