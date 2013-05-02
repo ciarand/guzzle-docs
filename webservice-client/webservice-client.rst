@@ -8,13 +8,13 @@ service API, including commands, service descriptions, and resource iterators.
 In this chapter, we'll build a simple `Twitter API client <https://dev.twitter.com/docs/api/1.1>`_.
 
 Creating a client
------------------
+=================
 
 A class that extends from ``Guzzle\Service\Client`` or implements ``Guzzle\Service\ClientInterface`` must implement a
 ``factory()`` method in order to be used with a :doc:`service builder <using-the-service-builder>`.
 
 Factory method
-~~~~~~~~~~~~~~
+--------------
 
 You can use the ``factory()`` method of a client directly if you do not need a service builder.
 
@@ -40,7 +40,7 @@ You can use the ``factory()`` method of a client directly if you do not need a s
     4. Copy all of the settings under "OAuth Settings"
 
 Implementing a factory method
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------
 
 Creating a client and its factory method is pretty simple. You just need to implement ``Guzzle\Service\ClientInterface``
 or extend from ``Guzzle\Service\Client``.
@@ -87,7 +87,7 @@ or extend from ``Guzzle\Service\Client``.
     }
 
 Service Builder
-~~~~~~~~~~~~~~~
+---------------
 
 A service builder is used to easily create web service clients, provides a simple configuration driven approach to
 creating clients, and allows you to share configuration settings across multiple clients. You can find out more about
@@ -127,7 +127,7 @@ The above example assumes you have JSON data similar to the following stored in 
     if you need to utilize the same client with varying configuration settings (e.g. multiple accounts).
 
 Commands
---------
+========
 
 Commands are a concept in Guzzle that helps to hide the underlying implementation of an API by providing an easy to use
 parameter driven object for each action of an API. A command is responsible for accepting an array of configuration
@@ -135,8 +135,59 @@ parameters, serializing an HTTP request, and parsing an HTTP response. Following
 `command pattern <http://en.wikipedia.org/wiki/Command_pattern>`_, commands in Guzzle offer a greater level of
 flexibility when implementing and utilizing a web service client.
 
+Executing commands
+------------------
+
+You must explicitly execute a command after creating a command using the ``getCommand()`` method. A command has an
+``execute()`` method that may be called, or you can use the ``execute()`` method of a client object and pass in the
+command object. Calling either of these execute methods will return the result value of the command. The result value is
+the result of parsing the HTTP response with the ``process()`` method.
+
+.. code-block:: php
+
+    // Get a command from the client and pass an array of parameters
+    $command = $twitter->getCommand('getMentions', array(
+        'count' => 5
+    ));
+
+    // Other parameters can be set on the command after it is created
+    $command['trim_user'] = false;
+
+    // Execute the command using the command object.
+    // The result value contains an array of JSON data from the response
+    $result = $command->execute();
+
+    // You can retrieve the result of the command later too
+    $result = $command->getResult().
+
+Command object also contains methods that allow you to inspect the HTTP request and response that was utilized with
+the command.
+
+.. code-block:: php
+
+    $request = $command->getRequest();
+    $response = $command->getResponse();
+
+.. note::
+
+    The format and notation used to retrieve commands from a client can be customized by injecting a custom command
+    factory, ``Guzzle\Service\Command\Factory\FactoryInterface``, on the client using ``$client->setCommandFactory()``.
+
+Executing with magic methods
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When using method missing magic methods with a command, the command will be executed right away and the result of the
+command is returned.
+
+.. code-block:: php
+
+    $jsonData = $twitter->getMentions(array(
+        'count'     => 5,
+        'trim_user' => true
+    ));
+
 Creating commands
-~~~~~~~~~~~~~~~~~
+-----------------
 
 Commands are created using either the ``getCommand()`` method of a client or a magic missing method of a client. Using
 the ``getCommand()`` method allows you to create a command without executing it, allowing for customization of the
@@ -268,49 +319,123 @@ parsing.
 Operation commands
 ~~~~~~~~~~~~~~~~~~
 
-Executing commands
-~~~~~~~~~~~~~~~~~~
+Operation commands are commands in which the serialization of an HTTP request and the parsing of an HTTP response are
+driven by a Guzzle service description. Because request serialization, validation, and response parsing are
+described using a DSL, creating operation commands is a much faster process than writing concrete commands.
 
-You must explicitly execute a command after creating a command using the ``getCommand()`` method. A command has an
-``execute()`` method that may be called, or you can use the ``execute()`` method of a client object and pass in the
-command object. Calling either of these execute methods will return the result value of the command. The result value is
-the result of parsing the HTTP response with the ``process()`` method.
+Creating operation commands for our Twitter client can remove a great deal of redundancy from the previous concrete
+command, and allows for a deeper runtime introspection of the API. Here's an example service description we can use to
+create the Twitter API client:
+
+.. code-block:: json
+
+    {
+        "name": "Twitter",
+        "apiVersion": "1.1",
+        "baseUrl": "https://api.twitter.com/1.1",
+        "description": "Twitter REST API client",
+        "operations": {
+            "GetMentions": {
+                "httpMethod": "GET",
+                "uri": "statuses/mentions_timeline.json",
+                "summary": "Returns the 20 most recent mentions for the authenticating user.",
+                "responseClass": "GetMentionsOutput",
+                "parameters": {
+                    "count": {
+                        "description": "Specifies the number of tweets to try and retrieve",
+                        "type": "integer",
+                        "location": "query"
+                    },
+                    "since_id": {
+                        "description": "Returns results with an ID greater than the specified ID",
+                        "type": "integer",
+                        "location": "query"
+                    },
+                    "max_id": {
+                        "description": "Returns results with an ID less than or equal to the specified ID.",
+                        "type": "integer",
+                        "location": "query"
+                    },
+                    "trim_user": {
+                        "description": "Limits the amount of data returned for each user",
+                        "type": "boolean",
+                        "location": "query"
+                    },
+                    "contributor_details": {
+                        "description": "Adds more data to contributor elements",
+                        "type": "boolean",
+                        "location": "query"
+                    },
+                    "include_entities": {
+                        "description": "The entities node will be disincluded when set to false.",
+                        "type": "boolean",
+                        "location": "query"
+                    }
+                }
+            }
+        },
+        "models": {
+            "GetMentionsOutput": {
+                "type": "object",
+                "additionalProperties": {
+                    "location": "json"
+                }
+            }
+        }
+    }
+
+If you're lazy, you can define the API in a less descriptive manner using ``additionalParameters``.
+``additionalParameters`` define the serialization and validation rules of parameters that are not explicitly defined
+in a service description.
+
+.. code-block:: json
+
+    {
+        "name": "Twitter",
+        "apiVersion": "1.1",
+        "baseUrl": "https://api.twitter.com/1.1",
+        "description": "Twitter REST API client",
+        "operations": {
+            "GetMentions": {
+                "httpMethod": "GET",
+                "uri": "statuses/mentions_timeline.json",
+                "summary": "Returns the 20 most recent mentions for the authenticating user.",
+                "responseClass": "GetMentionsOutput",
+                "additionalParameters": {
+                    "location": "query"
+                }
+            }
+        },
+        "models": {
+            "GetMentionsOutput": {
+                "type": "object",
+                "additionalProperties": {
+                    "location": "json"
+                }
+            }
+        }
+    }
+
+You should attach the service description to the client at the end of the client's factory method:
 
 .. code-block:: php
 
-    // Get a command from the client and pass an array of parameters
-    $command = $twitter->getCommand('getMentions', array(
-        'count' => 5
-    ));
+    // ...
+    class TwitterClient extends Client
+    {
+        public static function factory($config = array())
+        {
+            // ... same code as before ...
 
-    // Other parameters can be set on the command after it is created
-    $command['trim_user'] = false;
+            // Set the service description
+            $client->setDescription(ServiceDescription::factory('path/to/twitter.json'));
 
-    // Execute the command using the command object.
-    // The result value contains an array of JSON data from the response
-    $result = $command->execute();
+            return $client;
+        }
+    }
 
-    // You can retrieve the result of the command later too
-    $result = $command->getResult().
-
-Command object also contains methods that allow you to inspect the HTTP request and response that was utilized with
-the command.
-
-.. code-block:: php
-
-    $request = $command->getRequest();
-    $response = $command->getResponse();
-
-.. note::
-
-    The format and notation used to retrieve commands from a client can be customized by injecting a custom command
-    factory, ``Guzzle\Service\Command\Factory\FactoryInterface``, on the client using ``$client->setCommandFactory()``.
-
-Executing with magic methods
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-When using method missing magic methods with a command, the command will be executed right away and the result of the
-command is returned.
+The client can now use operations defined in the service description instead of requiring you to create concrete
+command classes. Feel free to delete the concrete command class we created earlier.
 
 .. code-block:: php
 
@@ -319,8 +444,8 @@ command is returned.
         'trim_user' => true
     ));
 
-Sending commands in parallel
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Executing commands in parallel
+------------------------------
 
 Much like HTTP requests, Guzzle allows you to send mutliple commands in parallel. You can send commands in parallel by
 passing an array of command objects to a client's ``execute()`` method. The client will serialize each request and
@@ -358,7 +483,7 @@ succeeded and a list of commands that failed.
     All commands executed from a client using an array must originate from the same client.
 
 Special command options
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
 Guzzle exposes several options that help to control how commands are validated, serialized, and parsed.
 
@@ -374,10 +499,10 @@ command.response_body       Tells the command object which EntityBody object sho
 =========================== ============================================================================================
 
 Advanced client configuration
------------------------------
+=============================
 
 Default command parameters
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 
 When creating a client object, you can specify default command parameters to pass into all commands. Any key value pair
 present in the ``command.options`` settings of a client will be added as default parameters to any command created
@@ -393,7 +518,7 @@ by the client.
     ));
 
 Magic methods
-~~~~~~~~~~~~~
+-------------
 
 Client objects will, by default, attempt to create and execute commands when a missing method is invoked on a client.
 This powerful concept applies to both concrete commands and operation commands powered by a service description. This
@@ -423,7 +548,7 @@ execute is defined as follows:
 You can disable magic methods on a client by passing ``false`` to the ``enableMagicMethod()`` method.
 
 Custom command factory
-~~~~~~~~~~~~~~~~~~~~~~
+----------------------
 
 A client by default uses the ``Guzzle\Service\Command\Factory\CompositeFactory`` which allows multiple command
 factories to attempt to create a command by a certain name. The default CompositeFactory uses a ``ConcreteClassFactory``
@@ -432,7 +557,7 @@ command factory if your client requires custom command creation logic using the 
 a client.
 
 Custom resource Iterator factory
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------
 
 Resource iterators can be retrieved from a client using the ``getIterator($name)`` method of a client. This method uses
 a client's internal ``Guzzle\Service\Resource\ResourceIteratorFactoryInterface`` object. A client by default uses a
@@ -442,7 +567,7 @@ followed by the ``Model`` subdirectory of a client. Use the ``setResourceIterato
 specify a custom resource iterator factory.
 
 Plugins and events
-------------------
+==================
 
 ``Guzzle\Service\Client`` exposes various events that allow you to hook in custom logic. A client object owns a
 ``Symfony\Component\EventDispatcher\EventDispatcher`` object that can be accessed by calling
@@ -452,7 +577,7 @@ event subscribers (classes that listen to specific events of a dispatcher).
 .. _service-client-events:
 
 Events emitted from a Service Client
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------
 
 A ``Guzzle\Service\Client`` object emits the following events:
 
