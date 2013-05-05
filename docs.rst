@@ -29,7 +29,6 @@
     webservice-client/webservice-client
     webservice-client/using-the-service-builder
     webservice-client/guzzle-service-descriptions
-    webservice-client/guzzle-service-description-schema
 
     batching/batching
 
@@ -71,7 +70,6 @@ The web service client
 * :doc:`webservice-client/webservice-client`
 * :doc:`webservice-client/using-the-service-builder`
 * :doc:`webservice-client/guzzle-service-descriptions`
-* :doc:`webservice-client/guzzle-service-description-schema`
 * :doc:`batching/batching`
 * :doc:`iterators/resource-iterators`
 * :doc:`iterators/guzzle-iterators`

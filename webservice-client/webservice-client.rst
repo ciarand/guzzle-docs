@@ -533,8 +533,8 @@ execute is defined as follows:
 1. The client will first try to find a literal match for an operation in the service description.
 2. If the literal match is not found, the client will try to uppercase the first character of the operation and find
    the match again.
-3. If a match is still not found, the command factory will inflect the method name from CamelCase to snake_case and attempt
-   to find a matching command.
+3. If a match is still not found, the command factory will inflect the method name from CamelCase to snake_case and
+   attempt to find a matching command.
 4. If a command still does not match, an exception is thrown.
 
 .. code-block:: php
