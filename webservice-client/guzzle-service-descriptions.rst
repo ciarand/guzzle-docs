@@ -492,6 +492,9 @@ json location
 
 Retrieves a top-level parameter from a JSON document contained in an HTTP response.
 
+You can use ``additionalProperties`` if the JSON document is wrapped in an outer array. This allows you to parse the
+contents of each item in the array using the parsing rules defined in the ``additionalProperties`` schema.
+
 xml location
 ^^^^^^^^^^^^
 
