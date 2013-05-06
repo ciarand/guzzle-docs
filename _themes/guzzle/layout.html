@@ -1,8 +1,8 @@
 {%- extends "basic/layout.html" %}
 {% set script_files = script_files + ['_static/prettify/prettify.js'] + script_files %}
-{% set css_files = ['_static/prettify/prettify.css?v=4'] + css_files %}
 {%- block extrahead %}
   {{ super() }}
+  <link rel="apple-touch-icon" href="{{ pathto('_static/prettify/prettify.css', 1) }}" />
   {% if theme_touch_icon %}
   <link rel="apple-touch-icon" href="{{ pathto('_static/' ~ theme_touch_icon, 1) }}" />
   {% endif %}
