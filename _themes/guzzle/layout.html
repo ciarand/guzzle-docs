@@ -53,6 +53,9 @@
     {% if prev or next %}
     </div>
     {% endif %}
+    <div class="container comment-container">
+        {% include "comments.html" %}
+    </div>
   {% endif %}
 {% endblock %}
 {%- block footer %}

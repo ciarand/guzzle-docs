@@ -1087,3 +1087,7 @@ input[type="submit"].btn.btn-mini {
   border-top-color: #ffffff;
   border-bottom-color: #ffffff;
 }
+
+.comment-container {
+    margin: 24px auto;
+}
