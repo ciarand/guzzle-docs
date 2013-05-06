@@ -128,6 +128,49 @@ endpoint and HTTP method. If an API has a ``DELETE /users/:id`` operation, a sat
     "errorResponses", "array", "Errors that could occur while executing the operation. Each item of the array is an object that can contain a 'code' (HTTP response status code of the error), 'phrase' (reason phrase or description of the error), and 'class' (an exception class that will be raised when this error is encountered)"
     "data", "object", "Any arbitrary data to associate with the operation"
     "parameters", "object containing :ref:`parameter-schema` objects", "Parameters of the operation. Parameters are used to define how input data is serialized into a HTTP request."
+    "additionalParameters", "A single :ref:`parameter-schema` object", "Validation and serialization rules for any parameter supplied to the operation that was not explicitly defined."
+
+additionalParameters
+~~~~~~~~~~~~~~~~~~~~
+
+When a webservice offers a large number of parameters that all are set in the same location (for example the query
+string or a JSON document), defining each parameter individually can require a lot of time and repetition. Furthermore,
+some web services allow for completely arbitrary parameters to be supplied for an operation. The
+``additionalParameters`` attribute can be used to solve both of these issues.
+
+As an example, we can define a Twitter API operation quite easily using ``additionalParameters``. The
+GetMentions operation accepts a large number of query string parameters. Defining each of these parameters
+is ideal because it provide much more introspection for the client and opens the possiblity to use the description with
+other tools (e.g. a documentation generator). However, you can very quickly provide a "catch-all" serialization rule
+that will place any custom parameters supplied to an operation the the generated request's query string parameters.
+
+.. class:: small-service-description
+
+    .. code-block:: json
+
+        {
+            "name": "Twitter",
+            "apiVersion": "1.1",
+            "baseUrl": "https://api.twitter.com/1.1",
+            "operations": {
+                "GetMentions": {
+                    "httpMethod": "GET",
+                    "uri": "statuses/mentions_timeline.json",
+                    "responseClass": "GetMentionsOutput",
+                    "additionalParameters": {
+                        "location": "query"
+                    }
+                }
+            },
+            "models": {
+                "GetMentionsOutput": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "location": "json"
+                    }
+                }
+            }
+        }
 
 responseClass
 ~~~~~~~~~~~~~
