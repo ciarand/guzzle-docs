@@ -442,9 +442,10 @@ No location
 
 If a parameter has no location attribute, then the parameter is simply used as a data value.
 
-.. note::
+Other locations
+^^^^^^^^^^^^^^^
 
-    Custom locations can be registered as new locations or override default locations if needed.
+Custom locations can be registered as new locations or override default locations if needed.
 
 .. _model-schema:
 
@@ -500,9 +501,10 @@ xml location
 
 Retrieves a top-level node value from an XML document contained in an HTTP response.
 
-.. note::
+Other locations
+^^^^^^^^^^^^^^^
 
-    Custom locations can be registered as new locations or override default locations if needed.
+Custom locations can be registered as new locations or override default locations if needed.
 
 Example service description
 ---------------------------
