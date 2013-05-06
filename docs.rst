@@ -37,9 +37,9 @@
 
     testing/unit-testing.rst
 
-======
-Guzzle
-======
+====================
+Guzzle Documentation
+====================
 
 Getting started
 ---------------

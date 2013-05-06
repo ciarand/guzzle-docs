@@ -139,6 +139,9 @@ html_static_path = ['_static']
 
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
+html_sidebars = {
+    '**':       ['relations.html', 'localtoc.html', 'leftbar.html', 'searchbox.html']
+}
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
@@ -250,4 +253,4 @@ texinfo_documents = [
 
 sys.path.append(os.path.abspath('_themes'))
 html_theme_path = ['_themes']
-html_theme = 'bootstrap'
+html_theme = 'guzzle'

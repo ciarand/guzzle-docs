@@ -1,0 +1,78 @@
+{%- extends "basic/layout.html" %}
+{% set script_files = script_files + ['_static/prettify/prettify.js'] + script_files %}
+{% set css_files = ['_static/prettify/prettify.css?v=4'] + css_files %}
+{%- block extrahead %}
+  {{ super() }}
+  {% if theme_touch_icon %}
+  <link rel="apple-touch-icon" href="{{ pathto('_static/' ~ theme_touch_icon, 1) }}" />
+  {% endif %}
+  <link media="only screen and (max-device-width: 480px)" href="{{
+    pathto('_static/small_guzzle.css', 1) }}" type= "text/css" rel="stylesheet" />
+  <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
+{% endblock %}
+{% block header %}
+  <div id="menu">
+      <div class="width-wrapper">
+          <div id="left-logo">
+              <span id="left-logo-image"></span>
+              <a href="{{ pathto(master_doc) }}">Guzzle</a>
+          </div>
+          <ul id="main-menu">
+              <li><a href="{{ pathto(master_doc) }}">Home</a></li>
+              <li><a href="{{ pathto('docs') }}">Docs</a></li>
+              <li><a href="http://guzzlephp.org/api/index.html">API</a></li>
+              <li><a href="https://github.com/guzzle/guzzle">GitHub</a></li>
+              <li><a href="https://groups.google.com/forum/?hl=en#!forum/guzzle">Forum</a></li>
+              <li><a href="https://packagist.org/packages/guzzle/guzzle">Packagist</a></li>
+              <li><a href="irc:irc.freenode.com/#guzzlephp">IRC</a></li>
+          </ul>
+          <div id="github-stars">
+              <iframe src="http://ghbtns.com/github-btn.html?user={{ theme_github_user }}&repo={{ theme_github_repo }}&type=watch&count=true&size=small"
+                      allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
+          </div>
+      </div>
+  </div>
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+  {% if pagename == 'index' %}
+    {% block relbar1 %}{% endblock %}
+    {% include "home.html" %}
+  {% else %}
+    {{ super() }}
+    {% if prev or next %}
+    <div id="footer-links"  class="width-wrapper">
+    {% endif %}
+    {%- if next %}
+    <a href="{{ next.link|e }}" title="{{ _('next chapter')}}">Next: {{ next.title }}</a>
+    {%- endif %}
+    {%- if prev %}
+    <a href="{{ prev.link|e }}" title="{{ _('previous chapter')}}">Prev: {{ prev.title }}</a>
+    {%- endif %}
+    {% if prev or next %}
+    </div>
+    {% endif %}
+  {% endif %}
+{% endblock %}
+{%- block footer %}
+  <div class="footer">
+    &copy; Copyright {{ copyright }}.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  {% if pagename == 'index' %}
+  </div>
+  {% endif %}
+  <script type="text/javascript">
+    {% if ga %}
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    {% endif %}
+    {% if pagename == 'index' %}
+      prettyPrint();
+    {% endif %}
+  </script>
+{%- endblock %}
