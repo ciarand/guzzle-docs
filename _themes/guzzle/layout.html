@@ -29,16 +29,10 @@
 
 {%- block extrahead %}
   <link rel="stylesheet" type="text/css" href="{{ pathto('_static/css/bootstrap-responsive.min.css', 1) }}" />
-  {% if theme_use_prettify %}
-  <link rel="stylesheet" type="text/css" href="{{ pathto('_static/css/prettify.css', 1) }}" />
-  <script type="text/javascript" src="{{ pathto('_static/js/prettify.js', 1) }}"></script>
-  {% endif %}
   {% if theme_touch_icon %}
   <link rel="apple-touch-icon" href="{{ pathto('_static/' ~ theme_touch_icon, 1) }}" />
   {% endif %}
   {{ super() }}
-  <link media="only screen and (max-device-width: 480px)" href="{{
-    pathto('_static/css/md_small.css', 1) }}" type= "text/css" rel="stylesheet" />
 {% endblock %}
 
 {% block header %}
@@ -123,9 +117,5 @@
     </script>
     {%- endif %}
   {%- endblock %}
-
-  {%- if theme_use_prettify %}
-    <script type="text/javascript">prettyPrint();</script>
-  {%- endif %}
 
 {%- endblock %}
