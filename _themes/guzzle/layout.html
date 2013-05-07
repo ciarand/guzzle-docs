@@ -1,51 +1,48 @@
 {%- extends "basic/layout.html" %}
 
-{% if theme_use_prettify %}
-  {% set script_files = script_files + [pathto("_static/prettify/prettify.js", 1)] %}
-{% endif %}
-
 {# Do this so that bootstrap is included before the main css file #}
 {%- block htmltitle %}
 {{ super() }}
-<link rel="stylesheet" type="text/css" href="{{ pathto('_static/css/bootstrap.css', 1) }}" />
+<link rel="stylesheet" type="text/css" href="{{ pathto('_static/css/bootstrap.min.css', 1) }}" />
 {%- endblock %}
 
 {# Displays the next and previous links both before and after content #}
 {% macro render_relations(class='footer-links') -%}
   {% if prev or next %}
     <div class="{{ class }}">
-    <ul class="breadcrumb pull-right">
-      {%- if prev and prev.title != '&lt;no title&gt;' %}
-      <li>
-        <a href="{{ prev.link|e }}" title="{{ _('previous chapter')}}">Prev: {{ prev.title }}</a>
+      <ul class="breadcrumb pull-right">
+        {%- if prev and prev.title != '&lt;no title&gt;' %}
+        <li>
+          <a href="{{ prev.link|e }}" title="{{ _('previous chapter')}}">Prev: {{ prev.title }}</a>
+          {%- if next and next.title != '&lt;no title&gt;' %}
+          <span class="divider">/</span>
+          {% endif %}
+        </li>
+        {%- endif %}
         {%- if next and next.title != '&lt;no title&gt;' %}
-        <span class="divider">/</span>
-        {% endif %}
-      </li>
-      {%- endif %}
-      {%- if next and next.title != '&lt;no title&gt;' %}
-        <li><a href="{{ next.link|e }}" title="{{ _('next chapter')}}">Next: {{ next.title }}</a></li>
-      {%- endif %}
-    </ul>
+          <li><a href="{{ next.link|e }}" title="{{ _('next chapter')}}">Next: {{ next.title }}</a></li>
+        {%- endif %}
+      </ul>
     </div>
   {% endif %}
 {%- endmacro %}
 
 {%- block extrahead %}
+  <link rel="stylesheet" type="text/css" href="{{ pathto('_static/css/bootstrap-responsive.min.css', 1) }}" />
   {% if theme_use_prettify %}
-  <link rel="stylesheet" type="text/css" href="{{ pathto('_static/prettify/prettify.css', 1) }}" />
+  <link rel="stylesheet" type="text/css" href="{{ pathto('_static/css/prettify.css', 1) }}" />
+  <script type="text/javascript" src="{{ pathto('_static/js/prettify.js', 1) }}"></script>
   {% endif %}
   {% if theme_touch_icon %}
   <link rel="apple-touch-icon" href="{{ pathto('_static/' ~ theme_touch_icon, 1) }}" />
   {% endif %}
   {{ super() }}
   <link media="only screen and (max-device-width: 480px)" href="{{
-    pathto('_static/css/small_guzzle.css', 1) }}" type= "text/css" rel="stylesheet" />
-  <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
+    pathto('_static/css/md_small.css', 1) }}" type= "text/css" rel="stylesheet" />
 {% endblock %}
 
 {% block header %}
-  <div class="navbar navbar-fixed-top navbar-inverse">
+  <div class="navbar navbar-fixed-top {{ theme_navbar_class }}">
     <div class="navbar-inner">
       <div class="container">
         <a class="brand" href="{{ pathto(master_doc) }}">{{ theme_project_nav_name }}</a>
@@ -69,50 +66,66 @@
 {% endblock %}
 
 {%- block content %}
-  <div class="container">
-    {{ render_relations('top-links') }}
-    <div class="document clearer">
-      {%- block sidebar1 %}{{ sidebar() }}{% endblock %}
-      {%- block document %}
-      <div class="body">
-        {% block body %} {% endblock %}
-      </div>
+
+  {%- if pagename == 'index' and theme_index_template %}
+    {% include theme_index_template %}
+  {%- else %}
+    <div class="container">
+
+      {%- block top_rel_links %}
+        {{ render_relations('top-links') }}
       {%- endblock %}
-      {%- block sidebar2 %}{% endblock %}
-      <div class="clearfix"></div>
-    </div>
-    {{ render_relations('footer-links') }}
-    {%- block comment -%}
-      {% if them_disqus_comment_shortname %}
-      <div class="container comment-container">
-        {% include "comments.html" %}
+
+      <div class="document clearer">
+        {%- block sidebar1 %}{{ sidebar() }}{% endblock %}
+        {%- block document %}
+        <div class="body">
+          {% block body %} {% endblock %}
+        </div>
+        {%- endblock %}
+        {%- block sidebar2 %}{# Place holder for other sidebar #}{% endblock %}
+        <div class="clearfix"></div>
       </div>
-      {% endif %}
-    {%- endblock %}
-  </div>
+
+      {%- block bottom_rel_links %}
+        {{ render_relations('footer-links') }}
+      {%- endblock %}
+
+      {%- block comments -%}
+        {% if theme_disqus_comments_shortname %}
+        <div class="container comment-container">
+          {% include "comments.html" %}
+        </div>
+        {% endif %}
+      {%- endblock %}
+
+    </div>
+  {%- endif %}
 {%- endblock %}
 
-
 {%- block footer %}
+
   <div class="footer container">
     &copy; Copyright {{ copyright }}. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
   </div>
 
-  {% if theme_google_analytics_account %}
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', '{{ theme_google_analytics_account }}']);
-    _gaq.push(['_trackPageview']);
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
-  {% endif %}
+  {%- block ga %}
+    {%- if theme_google_analytics_account %}
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', '{{ theme_google_analytics_account }}']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    {%- endif %}
+  {%- endblock %}
 
-  {% if pagename == 'index' and theme_use_prettify %}
+  {%- if theme_use_prettify %}
     <script type="text/javascript">prettyPrint();</script>
-  {% endif %}
+  {%- endif %}
 
 {%- endblock %}
