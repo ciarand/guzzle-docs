@@ -1,0 +1,220 @@
+/* Sphinx themes
+-------------------------------------------------- */
+
+div.clearer {
+  clear: both;
+}
+
+body {
+  padding-top: 55px;
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+}
+
+div.document {
+  margin: 0 auto;
+  font-size: 15px;
+  line-height: 1.5em;
+}
+
+.body {
+  width: 700px;
+  float: right;
+}
+
+div.related {
+  display: none;
+}
+
+a.headerlink {
+  visibility: hidden;
+  color: #ddd;
+  padding: 0 4px;
+  text-decoration: none;
+}
+
+h1:hover > a.headerlink,
+h2:hover > a.headerlink,
+h3:hover > a.headerlink,
+h4:hover > a.headerlink,
+h5:hover > a.headerlink,
+h6:hover > a.headerlink,
+dt:hover > a.headerlink {
+  visibility: visible;
+}
+
+a.headerlink:hover {
+  color: #444;
+  background: #eaeaea;
+  text-decoration: none;
+}
+
+div.body h1,
+div.body h2,
+div.body h3,
+div.body h4,
+div.body h5,
+div.body h6 {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-weight: normal;
+  margin: 30px 0px 10px 0px;
+  padding: 0;
+}
+
+div.body h1 { margin-top: 0; padding-top: 0; font-size: 240%; font-weight: bold; }
+div.body h2 { font-size: 180%; border-bottom: 1px solid #ccc; padding-bottom: 6px; font-weight: bold; }
+div.body h3 { font-size: 150%; font-weight: bold; }
+div.body h4 { font-size: 130%; }
+div.body h5 { font-size: 110%; }
+div.body h6 { font-size: 100%; }
+
+p {
+  margin: 1em 0;
+}
+
+div.body p, div.body dd, div.body li {
+  line-height: 1.5em;
+}
+
+code, pre {
+  font-family: Consolas, Monaco, Menlo, "Courier New", monospace;
+  font-size: 13px;
+  color: #333333;
+}
+
+/* Sphinx sidebar
+-------------------------------------------------- */
+
+div.sphinxsidebar a {
+  color: #444;
+  text-decoration: none;
+}
+
+div.sphinxsidebar a:hover {
+  border-bottom: 1px solid #999;
+}
+
+div.sphinxsidebar {
+  font-size: 14px;
+  line-height: 1.5;
+  float: left;
+  width: 200px;
+  padding: 0;
+}
+
+div.sphinxsidebarwrapper p.logo {
+  padding: 0 0 8px 0;
+  margin: 0;
+}
+
+div.sphinxsidebar h3,
+div.sphinxsidebar h4 {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  color: #444;
+  font-size: 24px;
+  font-weight: normal;
+  margin: 0 0 5px 0;
+  padding: 0;
+}
+
+div.sphinxsidebar h4 {
+  font-size: 20px;
+}
+
+div.sphinxsidebar h3 a {
+  color: #444;
+}
+
+div.sphinxsidebar p.logo a,
+div.sphinxsidebar h3 a,
+div.sphinxsidebar p.logo a:hover,
+div.sphinxsidebar h3 a:hover {
+  border: none;
+}
+
+div.sphinxsidebarwrapper h3.logo {
+  margin: 0;
+}
+
+div.sphinxsidebar p {
+  color: #555;
+  margin: 10px 0;
+}
+
+div.sphinxsidebar ul {
+  margin: 0 0 12px 0;
+  list-style-type: none;
+  color: #000;
+}
+
+div.sphinxsidebar ul ul,
+div.sphinxsidebar ul.want-points {
+  margin-left: 20px;
+  list-style: square;
+}
+
+div.sphinxsidebar ul ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+div.sphinxsidebar input {
+  border: 1px solid #ccc;
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 1em;
+}
+
+.margin-top-1em {
+  margin-top: 1em;
+}
+
+/* GitHub stars in the menu
+-------------------------------------------------- */
+
+#github-stars {
+  float: right;
+  margin: 10px 0 0 0;
+  padding: 0;
+}
+
+#github-stars iframe {
+  margin: 0;
+  padding: 0;
+}
+
+/* Disqus comments styles
+-------------------------------------------------- */
+
+.comment-container {
+  margin: 24px auto;
+}
+
+/* Next and previous links
+-------------------------------------------------- */
+
+.top-links .breadcrumb {
+  margin: 0;
+}
+
+.top-links .breadcrumb, .footer-links .breadcrumb {
+  background-color: #fff;
+}
+
+.footer-links {
+  border-top: 1px solid #ccc;
+  padding-top: 12px;
+  margin-top: 30px;
+}
+
+/* Footer styling
+-------------------------------------------------- */
+
+div.footer {
+  margin: 20px auto 30px auto;
+  font-size: 14px;
+  color: #888;
+  text-align: right;
+}
+
+div.footer a {
+  color: #888;
+}

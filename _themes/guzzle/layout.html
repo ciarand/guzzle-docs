@@ -4,18 +4,29 @@
   {% set script_files = script_files + [pathto("_static/prettify/prettify.js", 1)] %}
 {% endif %}
 
+{# Do this so that bootstrap is included before the main css file #}
+{%- block htmltitle %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ pathto('_static/css/bootstrap.css', 1) }}" />
+{%- endblock %}
+
 {# Displays the next and previous links both before and after content #}
 {% macro render_relations(class='footer-links') -%}
   {% if prev or next %}
-    <div class="width-wrapper">
-      <div class="{{ class }}">
-        {%- if next and next.title != '&lt;no title&gt;' %}
-        <a href="{{ next.link|e }}" title="{{ _('next chapter')}}">Next: {{ next.title }}</a>
-        {%- endif %}
-        {%- if prev and prev.title != '&lt;no title&gt;' %}
+    <div class="{{ class }}">
+    <ul class="breadcrumb pull-right">
+      {%- if prev and prev.title != '&lt;no title&gt;' %}
+      <li>
         <a href="{{ prev.link|e }}" title="{{ _('previous chapter')}}">Prev: {{ prev.title }}</a>
-        {%- endif %}
-      </div>
+        {%- if next and next.title != '&lt;no title&gt;' %}
+        <span class="divider">/</span>
+        {% endif %}
+      </li>
+      {%- endif %}
+      {%- if next and next.title != '&lt;no title&gt;' %}
+        <li><a href="{{ next.link|e }}" title="{{ _('next chapter')}}">Next: {{ next.title }}</a></li>
+      {%- endif %}
+    </ul>
     </div>
   {% endif %}
 {%- endmacro %}
@@ -29,51 +40,61 @@
   {% endif %}
   {{ super() }}
   <link media="only screen and (max-device-width: 480px)" href="{{
-    pathto('_static/small_guzzle.css', 1) }}" type= "text/css" rel="stylesheet" />
+    pathto('_static/css/small_guzzle.css', 1) }}" type= "text/css" rel="stylesheet" />
   <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
 {% endblock %}
 
 {% block header %}
-  <div id="menu">
-      <div class="width-wrapper">
-          <div id="left-logo">
-              <span id="left-logo-image"></span>
-              <a href="{{ pathto(master_doc) }}">{{ theme_project_nav_name }}</a>
-          </div>
-          <ul id="main-menu">
-              <li><a href="{{ pathto(master_doc) }}">Home</a></li>
-              <li><a href="{{ pathto('docs') }}">Docs</a></li>
-              <li><a href="http://guzzlephp.org/api/index.html">API</a></li>
-              <li><a href="https://github.com/guzzle/guzzle">GitHub</a></li>
-              <li><a href="https://groups.google.com/forum/?hl=en#!forum/guzzle">Forum</a></li>
-              <li><a href="https://packagist.org/packages/guzzle/guzzle">Packagist</a></li>
-              <li><a href="irc:irc.freenode.com/#guzzlephp">IRC</a></li>
-          </ul>
-          <div id="github-stars">
-              <iframe src="http://ghbtns.com/github-btn.html?user={{ theme_github_user }}&repo={{ theme_github_repo }}&type=watch&count=true&size=small"
-                      allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
-          </div>
+  <div class="navbar navbar-fixed-top navbar-inverse">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="{{ pathto(master_doc) }}">{{ theme_project_nav_name }}</a>
+        <ul class="nav">
+          <li><a href="{{ pathto(master_doc) }}">Home</a></li>
+          <li><a href="{{ pathto('docs') }}">Docs</a></li>
+          <li><a href="http://guzzlephp.org/api/index.html">API</a></li>
+          <li><a href="https://github.com/guzzle/guzzle">GitHub</a></li>
+          <li><a href="https://groups.google.com/forum/?hl=en#!forum/guzzle">Forum</a></li>
+          <li><a href="https://packagist.org/packages/guzzle/guzzle">Packagist</a></li>
+          <li><a href="irc:irc.freenode.com/#guzzlephp">IRC</a></li>
+        </ul>
+        <div class="pull-right" id="github-stars">
+          <iframe src="http://ghbtns.com/github-btn.html?user={{ theme_github_user }}&repo={{ theme_github_repo }}&type=watch&count=true&size=small"
+                  allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
+        </div>
       </div>
+    </div>
   </div>
   {{ super() }}
 {% endblock %}
 
-{% block content %}
-  {% if pagename == 'index' %}
-    {% block relbar1 %}{% endblock %}
-    {% include "home.html" %}
-  {% else %}
+{%- block content %}
+  <div class="container">
     {{ render_relations('top-links') }}
-    {{ super() }}
-    {{ render_relations('footer-links') }}
-    <div class="container comment-container">
-      {% include "comments.html" %}
+    <div class="document clearer">
+      {%- block sidebar1 %}{{ sidebar() }}{% endblock %}
+      {%- block document %}
+      <div class="body">
+        {% block body %} {% endblock %}
+      </div>
+      {%- endblock %}
+      {%- block sidebar2 %}{% endblock %}
+      <div class="clearfix"></div>
     </div>
-  {% endif %}
-{% endblock %}
+    {{ render_relations('footer-links') }}
+    {%- block comment -%}
+      {% if them_disqus_comment_shortname %}
+      <div class="container comment-container">
+        {% include "comments.html" %}
+      </div>
+      {% endif %}
+    {%- endblock %}
+  </div>
+{%- endblock %}
+
 
 {%- block footer %}
-  <div class="footer">
+  <div class="footer container">
     &copy; Copyright {{ copyright }}. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
   </div>
 

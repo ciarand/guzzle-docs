@@ -86,30 +86,20 @@ exclude_patterns = ['_build']
 # output. They are ignored by default.
 #show_authors = False
 
-sys.path.append(os.path.abspath('_themes'))
-sys.path.append(os.path.abspath('_themes/guzzle'))
-
-# The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'guzzle_theme_support.FlaskyStyle'
-
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
 
 
 # -- Options for HTML output ---------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-html_theme = 'default'
+sys.path.append(os.path.abspath('_themes'))
+sys.path.append(os.path.abspath('_themes/guzzle'))
 
-# Theme options are theme-specific and customize the look and feel of a theme
-# further.  For a list of options available for each theme, see the
-# documentation.
-#html_theme_options = {}
-
-# Add any paths that contain custom themes here, relative to this directory.
-# html_theme_path = ['theme']
-# sys.path.append(os.path.abspath('theme'))
+# The name of the Pygments (syntax highlighting) style to use.
+pygments_style = 'guzzle_theme_support.FlaskyStyle'
+html_translator_class = 'guzzle.HTMLTranslator'
+html_theme_path = ['_themes']
+html_theme = 'guzzle'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -253,7 +243,3 @@ texinfo_documents = [
 
 # How to display URL addresses: 'indextnote', 'no', or 'inline'.
 #texinfo_show_urls = 'indextnote'
-
-sys.path.append(os.path.abspath('_themes'))
-html_theme_path = ['_themes']
-html_theme = 'guzzle'
