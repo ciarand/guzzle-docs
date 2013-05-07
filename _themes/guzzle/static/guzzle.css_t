@@ -26,7 +26,7 @@ body {
 
 div.document {
     width: {{ page_width }};
-    margin: 30px auto 0 auto;
+    margin: 0 auto;
 }
 
 div.documentwrapper {
@@ -417,6 +417,7 @@ a:hover tt {
 }
 
 .width-wrapper {
+    position: relative;
     width: {{ page_width }};
     margin: 0 auto;
 }
@@ -461,14 +462,19 @@ a:hover tt {
     text-decoration: underline;
 }
 
-#footer-links {
+.top-links {
+    height: 30px;
+    margin-top: 12px;
+}
+
+.footer-links {
     border-top: 1px solid #ccc;
     padding-top: 12px;
     margin-top: 30px;
     height: 30px;
 }
 
-#footer-links a {
+.footer-links a, .top-links a {
     padding: 0 24px 0 0;
     display: block;
     padding: 0 0 0 20px;

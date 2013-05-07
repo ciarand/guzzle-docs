@@ -1,15 +1,38 @@
 {%- extends "basic/layout.html" %}
-{% set script_files = script_files + ['_static/prettify/prettify.js'] + script_files %}
+
+{% if theme_use_prettify %}
+  {% set script_files = script_files + [pathto("_static/prettify/prettify.js", 1)] %}
+{% endif %}
+
+{# Displays the next and previous links both before and after content #}
+{% macro render_relations(class='footer-links') -%}
+  {% if prev or next %}
+    <div class="width-wrapper">
+      <div class="{{ class }}">
+        {%- if next and next.title != '&lt;no title&gt;' %}
+        <a href="{{ next.link|e }}" title="{{ _('next chapter')}}">Next: {{ next.title }}</a>
+        {%- endif %}
+        {%- if prev and prev.title != '&lt;no title&gt;' %}
+        <a href="{{ prev.link|e }}" title="{{ _('previous chapter')}}">Prev: {{ prev.title }}</a>
+        {%- endif %}
+      </div>
+    </div>
+  {% endif %}
+{%- endmacro %}
+
 {%- block extrahead %}
-  {{ super() }}
-  <link type="text/css" href="{{ pathto('_static/prettify/prettify.css', 1) }}" />
+  {% if theme_use_prettify %}
+  <link rel="stylesheet" type="text/css" href="{{ pathto('_static/prettify/prettify.css', 1) }}" />
+  {% endif %}
   {% if theme_touch_icon %}
   <link rel="apple-touch-icon" href="{{ pathto('_static/' ~ theme_touch_icon, 1) }}" />
   {% endif %}
+  {{ super() }}
   <link media="only screen and (max-device-width: 480px)" href="{{
     pathto('_static/small_guzzle.css', 1) }}" type= "text/css" rel="stylesheet" />
   <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
 {% endblock %}
+
 {% block header %}
   <div id="menu">
       <div class="width-wrapper">
@@ -40,42 +63,35 @@
     {% block relbar1 %}{% endblock %}
     {% include "home.html" %}
   {% else %}
+    {{ render_relations('top-links') }}
     {{ super() }}
-    {% if prev or next %}
-    <div id="footer-links"  class="width-wrapper">
-    {% endif %}
-    {%- if next %}
-    <a href="{{ next.link|e }}" title="{{ _('next chapter')}}">Next: {{ next.title }}</a>
-    {%- endif %}
-    {%- if prev %}
-    <a href="{{ prev.link|e }}" title="{{ _('previous chapter')}}">Prev: {{ prev.title }}</a>
-    {%- endif %}
-    {% if prev or next %}
-    </div>
-    {% endif %}
+    {{ render_relations('footer-links') }}
     <div class="container comment-container">
-        {% include "comments.html" %}
+      {% include "comments.html" %}
     </div>
   {% endif %}
 {% endblock %}
+
 {%- block footer %}
   <div class="footer">
-    &copy; Copyright {{ copyright }}.
-    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+    &copy; Copyright {{ copyright }}. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
   </div>
-  {% if pagename == 'index' %}
-  </div>
-  {% endif %}
+
+  {% if theme_google_analytics_account %}
   <script type="text/javascript">
-    {% if ga %}
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', '{{ theme_google_analytics_account }}']);
+    _gaq.push(['_trackPageview']);
     (function() {
       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
-    {% endif %}
-    {% if pagename == 'index' %}
-      prettyPrint();
-    {% endif %}
   </script>
+  {% endif %}
+
+  {% if pagename == 'index' and theme_use_prettify %}
+    <script type="text/javascript">prettyPrint();</script>
+  {% endif %}
+
 {%- endblock %}
