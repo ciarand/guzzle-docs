@@ -235,6 +235,11 @@ texinfo_documents = [
 # How to display URL addresses: 'indextnote', 'no', or 'inline'.
 #texinfo_show_urls = 'indextnote'
 
+# Ensure that the theme was symlinked
+if not os.path.isdir(os.path.abspath('_themes/guzzle_theme')):
+    raise Exception('You must symlink '
+        ' https://github.com/guzzle/guzzle_sphinx_theme to _themes/guzzle_theme')
+
 sys.path.append(os.path.abspath('_themes'))
 pygments_style = 'guzzle_theme.GuzzleStyle'
 html_translator_class = 'guzzle_theme.HTMLTranslator'
