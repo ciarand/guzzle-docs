@@ -236,15 +236,15 @@ texinfo_documents = [
 #texinfo_show_urls = 'indextnote'
 
 # Ensure that the theme was symlinked
-if not os.path.isdir(os.path.abspath('_themes/guzzle_theme')):
+if not os.path.isdir(os.path.abspath('_themes/guzzle_sphinx_theme')):
     raise Exception('You must symlink '
         ' https://github.com/guzzle/guzzle_sphinx_theme to _themes/guzzle_theme')
 
 sys.path.append(os.path.abspath('_themes'))
-pygments_style = 'guzzle_theme.GuzzleStyle'
-html_translator_class = 'guzzle_theme.HTMLTranslator'
+pygments_style = 'guzzle_sphinx_theme.GuzzleStyle'
+html_translator_class = 'guzzle_sphinx_theme.HTMLTranslator'
 html_theme_path = ['_themes']
-html_theme = 'guzzle_theme'
+html_theme = 'guzzle_sphinx_theme'
 
 # Guzzle theme options (see theme.conf for more information)
 html_theme_options = {
