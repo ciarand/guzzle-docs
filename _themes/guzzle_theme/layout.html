@@ -2,8 +2,8 @@
 
 {# Do this so that bootstrap is included before the main css file #}
 {%- block htmltitle %}
-{{ super() }}
-<link rel="stylesheet" type="text/css" href="{{ pathto('_static/css/bootstrap.min.css', 1) }}" />
+  {{ super() }}
+  <link rel="stylesheet" type="text/css" href="{{ pathto('_static/css/bootstrap.min.css', 1) }}" />
 {%- endblock %}
 
 {# Displays the next and previous links both before and after content #}
@@ -45,18 +45,16 @@
       <div class="container">
         <a class="brand" href="{{ pathto(master_doc) }}">{{ theme_project_nav_name }}</a>
         <ul class="nav">
-          <li><a href="{{ pathto(master_doc) }}">Home</a></li>
-          <li><a href="{{ pathto('docs') }}">Docs</a></li>
-          <li><a href="http://guzzlephp.org/api/index.html">API</a></li>
-          <li><a href="https://github.com/guzzle/guzzle">GitHub</a></li>
-          <li><a href="https://groups.google.com/forum/?hl=en#!forum/guzzle">Forum</a></li>
-          <li><a href="https://packagist.org/packages/guzzle/guzzle">Packagist</a></li>
-          <li><a href="irc:irc.freenode.com/#guzzlephp">IRC</a></li>
+          {%- block nav_links %}
+            <li><a href="{{ pathto(master_doc) }}">Home</a></li>
+          {%- endblock %}
         </ul>
+        {%- if theme_github_user and theme_github_repo %}
         <div class="pull-right" id="github-stars">
           <iframe src="http://ghbtns.com/github-btn.html?user={{ theme_github_user }}&repo={{ theme_github_repo }}&type=watch&count=true&size=small"
                   allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px"></iframe>
         </div>
+        {%- endif %}
       </div>
     </div>
   </div>
@@ -74,16 +72,18 @@
         {{ render_relations('top-links', 1) }}
       {%- endblock %}
 
-      <div class="document clearer">
-        {%- block sidebar1 %}{{ sidebar() }}{% endblock %}
-        {%- block document %}
-        <div class="body">
-          {% block body %} {% endblock %}
+      {%- block document_wrapper %}
+        <div class="document clearer">
+          {%- block sidebar1 %}{{ sidebar() }}{% endblock %}
+          {%- block document %}
+            <div class="body">
+              {% block body %} {% endblock %}
+            </div>
+          {%- endblock %}
+          {%- block sidebar2 %}{# Place holder for other sidebar #}{% endblock %}
+          <div class="clearfix"></div>
         </div>
-        {%- endblock %}
-        {%- block sidebar2 %}{# Place holder for other sidebar #}{% endblock %}
-        <div class="clearfix"></div>
-      </div>
+      {%- endblock %}
 
       {%- block bottom_rel_links %}
         {{ render_relations('footer-links') }}
@@ -103,9 +103,11 @@
 
 {%- block footer %}
 
+  {%- block footer_wrapper %}
   <div class="footer container">
     &copy; Copyright {{ copyright }}. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
   </div>
+  {%- endblock %}
 
   {%- block ga %}
     {%- if theme_google_analytics_account %}

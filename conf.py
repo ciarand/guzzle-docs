@@ -92,15 +92,6 @@ exclude_patterns = ['_build']
 
 # -- Options for HTML output ---------------------------------------------------
 
-sys.path.append(os.path.abspath('_themes'))
-sys.path.append(os.path.abspath('_themes/guzzle'))
-
-# The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'guzzle_theme_support.FlaskyStyle'
-html_translator_class = 'guzzle.HTMLTranslator'
-html_theme_path = ['_themes']
-html_theme = 'guzzle'
-
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 #html_title = None
@@ -243,3 +234,19 @@ texinfo_documents = [
 
 # How to display URL addresses: 'indextnote', 'no', or 'inline'.
 #texinfo_show_urls = 'indextnote'
+
+sys.path.append(os.path.abspath('_themes'))
+pygments_style = 'guzzle_theme.GuzzleStyle'
+html_translator_class = 'guzzle_theme.HTMLTranslator'
+html_theme_path = ['_themes']
+html_theme = 'guzzle_theme'
+
+# Guzzle theme options (see theme.conf for more information)
+html_theme_options = {
+    "index_template": "index.html",
+    "project_nav_name": "Guzzle",
+    "github_user": "guzzle",
+    "github_repo": "guzzle",
+    "disqus_comments_shortname": "guzzle",
+    "google_analytics_account": "UA-22752917-1"
+}
