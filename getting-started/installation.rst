@@ -162,8 +162,10 @@ Framework integrations
 Using Guzzle with Symfony
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A `Guzzle Symfony2 bundle <https://github.com/ddeboer/GuzzleBundle>`_ is available on github thanks to
-`ddeboer <https://github.com/ddeboer>`_
+Bundles are available on github:
+
+- `DdeboerGuzzleBundle <https://github.com/ddeboer/GuzzleBundle>`_ for Guzzle 2
+- `MisdGuzzleBundle <https://github.com/misd-service-development/guzzle-bundle>`_ for Guzzle 3
 
 Using Guzzle with Silex
 ~~~~~~~~~~~~~~~~~~~~~~~
