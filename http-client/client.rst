@@ -399,5 +399,5 @@ A ``Guzzle\Http\Client`` object emits the following events:
     // Add a listener that will echo out requests as they are created
     $client->getEventDispatcher()->addListener('client.create_request', function (Event $e) {
         echo 'Client object: ' . spl_object_hash($e['client']) . "\n";
-        echo "Request object: {$request}\n";
+        echo "Request object: {$e['request']}\n";
     });
