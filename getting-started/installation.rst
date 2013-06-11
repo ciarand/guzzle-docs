@@ -16,38 +16,21 @@ Composer
 
 The recommneded way to install Guzzle is with `Composer <http://getcomposer.org>`_. Composer is a dependency
 management tool for PHP that allows you to declare the dependencies your project needs and installs them into your
-project. In order to use Guzzle with Composer, you must do the following:
+project.
 
-#. Add ``"guzzle/guzzle"`` as a dependency in your project's ``composer.json`` file.
+.. code-block:: bash
 
-   .. code-block:: js
+    # Install Composer
+    curl -sS https://getcomposer.org/installer | php
 
-       {
-           "require": {
-               "guzzle/guzzle": "3.5.*"
-           }
-       }
+    # Add Guzzle as a dependency
+    php composer.phar require guzzle/guzzle:~3.7
 
-#. Download and install Composer.
+After installing, you need to require Composer's autoloader:
 
-   .. code-block:: sh
+.. code-block:: php
 
-       curl -s "http://getcomposer.org/installer" | php
-
-#. Install your dependencies.
-
-   .. code-block:: sh
-
-       php composer.phar install
-
-#. Require Composer's autoloader.
-
-   Composer also prepares an autoload file that's capable of autoloading all of the classes in any of the libraries
-   that it downloads. To use it, just add the following line to your code's bootstrap process.
-
-   .. code-block:: php
-
-       require __DIR__ . '/vendor/autoload.php';
+    require 'vendor/autoload.php';
 
 You can find out more on how to install Composer, configure autoloading, and other best-practices for defining
 dependencies at `getcomposer.org <http://getcomposer.org>`_.
@@ -132,7 +115,7 @@ You can install a specific version of Guzzle by providing a version number suffi
 
 .. code-block:: bash
 
-    pear install guzzle/guzzle-3.5.0
+    pear install guzzle/guzzle-3.7.0
 
 Contributing to Guzzle
 ----------------------
