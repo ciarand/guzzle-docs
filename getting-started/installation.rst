@@ -87,8 +87,6 @@ packages available through Composer.
 +-----------------------------------------------------------------------------------------------+------------------------------------------+
 | `guzzle/plugin-cookie <https://packagist.org/packages/guzzle/plugin-cookie>`_                 | Provides ``Guzzle\Plugin\Cookie``        |
 +-----------------------------------------------------------------------------------------------+------------------------------------------+
-| `guzzle/plugin-curlauth <https://packagist.org/packages/guzzle/plugin-curlauth>`_             | Provides ``Guzzle\Plugin\CurlAuth``      |
-+-----------------------------------------------------------------------------------------------+------------------------------------------+
 | `guzzle/plugin-error-response <https://packagist.org/packages/guzzle/plugin-error-response>`_ | Provides ``Guzzle\Plugin\ErrorResponse`` |
 +-----------------------------------------------------------------------------------------------+------------------------------------------+
 | `guzzle/plugin-history <https://packagist.org/packages/guzzle/plugin-history>`_               | Provides ``Guzzle\Plugin\History``       |
