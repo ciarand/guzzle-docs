@@ -193,7 +193,7 @@ PATCH requests
 
 .. code-block:: php
 
-    $request = $client->put('http://httpbin.org', array(), 'this is the body');
+    $request = $client->patch('http://httpbin.org', array(), 'this is the body');
     $response = $request->send();
 
 OPTIONS requests
