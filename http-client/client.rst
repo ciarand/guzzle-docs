@@ -286,7 +286,7 @@ client.
 body
 ~~~~
 
-Sets the body of a request. The value supplied to the body option can be a ``Guzzle\Http\EntitBodyInterface``, string,
+Sets the body of a request. The value supplied to the body option can be a ``Guzzle\Http\EntityBodyInterface``, string,
 fopen resource, or array when sending POST requests. When a ``body`` request option is supplied, the option value will
 ovewrite the ``$body`` argument of a client creational method.
 
