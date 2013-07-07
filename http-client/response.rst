@@ -48,7 +48,7 @@ variations of HTTP response headers.
     $response->getEtag();
     // etc... There are methods for every known response header
 
-You can interact withe Response headers using the same exact methods used to interact with Request headers. See
+You can interact with the Response headers using the same exact methods used to interact with Request headers. See
 :ref:`http-message-headers` for more information.
 
 .. code-block:: php
