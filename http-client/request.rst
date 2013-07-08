@@ -135,7 +135,7 @@ You can alternatively build up the contents of a POST request.
 .. code-block:: php
 
     $request = $client->post('http://httpbin.org/post')
-        ->addPostField('custom_field', 'my custom value')
+        ->setPostField('custom_field', 'my custom value')
         ->addPostFile('file', '/path/to/file.xml');
 
     $response = $request->send();
