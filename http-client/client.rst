@@ -294,7 +294,7 @@ auth
 ~~~~
 
 Specifies and array of HTTP authorization parameters parameters to use with the request. The array must contain the
-username in index [0], the password in index [2], and can optionally contain the authentication type in index [3].
+username in index [0], the password in index [1], and can optionally contain the authentication type in index [2].
 The available authentication types are: "Basic" (default), "Digest", "NTLM", or "Any".
 
 .. code-block:: php
