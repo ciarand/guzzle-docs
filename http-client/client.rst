@@ -226,9 +226,9 @@ should be downloaded, proxies, auth, etc.
 headers
 ~~~~~~~
 
-Associative array of headers to apply to the request. When specified in the ``$options` argument of a client creational
+Associative array of headers to apply to the request. When specified in the ``$options`` argument of a client creational
 method (e.g. ``get()``, ``post()``, etc), the headers in the ``$options`` array will overwrite headers specified in the
-`$headers` array.
+``$headers`` array.
 
 .. code-block:: php
 
