@@ -28,7 +28,7 @@ variable replacements;  URI templates can provide an enormous amount of flexibil
 
 .. code-block:: php
 
-    $request = $client->get(array('http://example.com{+path}{/segments}{?query,data*}', array(
+    $request = $client->get(array('http://example.com{+path}{/segments*}{?query,data*}', array(
         'path'     => '/foo/bar',
         'segments' => array('one', 'two'),
         'query'    => 'test',
