@@ -67,7 +67,7 @@ be cast to a string, or you can pass ``true`` to this method to retrieve the bod
 
     $request = $client->get('http://www.amazon.com');
     $response = $request->send();
-    echo $request->getBody();
+    echo $response->getBody();
 
 See :doc:`/http-client/entity-bodies` for more information on entity bodies.
 
