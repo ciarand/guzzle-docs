@@ -21,7 +21,7 @@ index of the array are template variables that are merged into the client's conf
 
 .. code-block:: php
 
-    $request = $client->get(array('/test{?a,b}', array('b' => 'there'));
+    $request = $client->get(array('/test{?a,b}', array('b' => 'there')));
 
 The URL for this request will become ``https://test.com?a=hi&b=there``. URI templates aren't limited to just simple
 variable replacements;  URI templates can provide an enormous amount of flexibility when creating request URIs.
