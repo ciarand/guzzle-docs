@@ -110,7 +110,7 @@ The above example assumes you have JSON data similar to the following stored in 
     {
         "services": {
             "twitter": {
-                "class": "mtdowling\TwitterClient",
+                "class": "mtdowling\\TwitterClient",
                 "params": {
                     "consumer_key": "****",
                     "consumer_secret": "****",
