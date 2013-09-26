@@ -8,7 +8,7 @@ Guzzle is extremely extensible because of the behavioral modifications that can 
 commands using an event system. Before and after the majority of actions are taken in the library, an event is emitted
 with the name of the event and context surrounding the event. Observers can subscribe to a subject and modify the
 subject based on the events received. Guzzle's event system utilizes the Symfony2 EventDispatcher and is the backbone
-of it's plugin architecture.
+of its plugin architecture.
 
 Overview
 --------

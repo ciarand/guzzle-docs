@@ -105,7 +105,7 @@ time while polling and reading. Guzzle provides a simple way to convert HTTP req
 ``Guzzle\Stream\Stream`` objects so that you can send the initial headers of a request, read the response headers, and
 pull in the response body manually as needed.
 
-Here's an example using the Twitter Streaming API to track the keyword "beiber":
+Here's an example using the Twitter Streaming API to track the keyword "bieber":
 
 .. code-block:: php
 

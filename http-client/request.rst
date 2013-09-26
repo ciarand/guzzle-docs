@@ -273,7 +273,7 @@ Let's disable URL-encoding to better see what's happening.
 
 As you can see, the multiple values were converted into query string parameters following the default PHP convention of
 adding numerically indexed square bracket suffixes to each key (``foo[0]=baz&foo[1]=bar``). The strategy used to convert
-mutli-value parameters into a string can be customized using the ``setAggregator()`` method of the Query class. Guzzle
+multi-value parameters into a string can be customized using the ``setAggregator()`` method of the Query class. Guzzle
 ships with the following query string aggregators by default:
 
 1. ``Guzzle\Http\QueryAggregator\PhpAggregator``: Aggregates using PHP style brackets (e.g. ``foo[0]=baz&foo[1]=bar``)

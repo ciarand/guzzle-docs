@@ -14,7 +14,7 @@ Installing Guzzle
 Composer
 ~~~~~~~~
 
-The recommneded way to install Guzzle is with `Composer <http://getcomposer.org>`_. Composer is a dependency
+The recommended way to install Guzzle is with `Composer <http://getcomposer.org>`_. Composer is a dependency
 management tool for PHP that allows you to declare the dependencies your project needs and installs them into your
 project.
 
@@ -143,7 +143,7 @@ Framework integrations
 Using Guzzle with Symfony
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Bundles are available on github:
+Bundles are available on GitHub:
 
 - `DdeboerGuzzleBundle <https://github.com/ddeboer/GuzzleBundle>`_ for Guzzle 2
 - `MisdGuzzleBundle <https://github.com/misd-service-development/guzzle-bundle>`_ for Guzzle 3
@@ -151,4 +151,4 @@ Bundles are available on github:
 Using Guzzle with Silex
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-A `Guzzle Silex service provider <https://github.com/guzzle/guzzle-silex-extension>`_ is available on github.
+A `Guzzle Silex service provider <https://github.com/guzzle/guzzle-silex-extension>`_ is available on GitHub.

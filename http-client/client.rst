@@ -108,7 +108,7 @@ or special options that alter the client's behavior:
 +-------------------------------+-------------------------------------------------------------------------------------+
 
 Here's an example showing how to set various configuration options, including default headers to send with each request,
-defauly query string parameters to add to each request, a default auth scheme for each request, and a proxy to use for
+default query string parameters to add to each request, a default auth scheme for each request, and a proxy to use for
 each request. Values can be injected into the client's base URL using variables from the configuration array.
 
 .. code-block:: php
@@ -288,7 +288,7 @@ body
 
 Sets the body of a request. The value supplied to the body option can be a ``Guzzle\Http\EntityBodyInterface``, string,
 fopen resource, or array when sending POST requests. When a ``body`` request option is supplied, the option value will
-ovewrite the ``$body`` argument of a client creational method.
+overwrite the ``$body`` argument of a client creational method.
 
 auth
 ~~~~

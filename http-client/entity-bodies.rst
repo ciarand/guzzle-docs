@@ -72,7 +72,7 @@ Guzzle provides several EntityBody decorators that can be used to add functional
 IoEmittingEntityBody
 ~~~~~~~~~~~~~~~~~~~~
 
-This decorator will emity events when data is read from a stream or written to a stream. Add an event subscriber to the
+This decorator will emit events when data is read from a stream or written to a stream. Add an event subscriber to the
 entity body's ``body.read`` or ``body.write`` methods to receive notifications when data data is transferred.
 
 .. code-block:: php

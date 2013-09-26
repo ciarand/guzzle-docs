@@ -129,7 +129,7 @@ creating a simple observer on the client.  Mock response files must contain a fu
     <?xml version="1.0" encoding="UTF-8"?>
     <LocationConstraint xmlns="http://s3.amazonaws.com/doc/2006-03-01/">EU</LocationConstraint>
 
-After queueing mock responses for a client, you can get an array of the requests that were sent by the client that
+After queuing mock responses for a client, you can get an array of the requests that were sent by the client that
 were issued a mock response by calling ``$this->getMockedRequests()``.
 
 You can also use the ``Guzzle\Plugin\Mock\MockPlugin`` object directly with your clients.

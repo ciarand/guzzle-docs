@@ -32,7 +32,7 @@ Similar to cURL's ``effective_url`` property, Guzzle provides the effective URL,
 the request, in a response's ``getEffectiveUrl()`` method.
 
 When testing or debugging, it is often useful to see a history of redirects for a particular request. This can be
-acheived using the HistoryPlugin.
+achieved using the HistoryPlugin.
 
 .. code-block:: php
 

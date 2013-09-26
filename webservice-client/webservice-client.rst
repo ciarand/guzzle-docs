@@ -447,7 +447,7 @@ command classes. Feel free to delete the concrete command class we created earli
 Executing commands in parallel
 ------------------------------
 
-Much like HTTP requests, Guzzle allows you to send mutliple commands in parallel. You can send commands in parallel by
+Much like HTTP requests, Guzzle allows you to send multiple commands in parallel. You can send commands in parallel by
 passing an array of command objects to a client's ``execute()`` method. The client will serialize each request and
 send them all in parallel. If an error is encountered during the transfer, then a
 ``Guzzle\Service\Exception\CommandTransferException`` is thrown, which allows you to retrieve a list of commands that
